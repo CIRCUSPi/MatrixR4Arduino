@@ -17,10 +17,6 @@ MatrixR4::MatrixR4(SoftwareSerial* commSerial)
 
 MatrixR4::RESULT MatrixR4::Init()
 {
-    for (uint8_t i = 0; i < MatrixR4_BUTTON_NUM; i++) {
-        btnsState[i] = BTN_STATE::NOKEY;
-    }
-
     // TODO: 初始化所有變數
 
     if (!commSerial->begin(MatrixR4_COMM_BAUDRATE, SERIAL_8N1)) {
@@ -396,9 +392,9 @@ MatrixR4::RESULT MatrixR4::SetEncoderResetCounter(uint8_t num)
 }
 
 // Getting
-MatrixR4::RESULT MatrixR4::GetButtonState(uint8_t num, BTN_STATE& btnState)
+MatrixR4::RESULT MatrixR4::GetButtonState(uint8_t num, bool& btnState)
 {
-    uint8_t data[1] = {(1 << --num)};
+    uint8_t data[1] = {--num};
     CommSendData(COMM_CMD::GET_BUTTON_STATE, data, 1);
     if (!WaitData(COMM_CMD::GET_BUTTON_STATE, 10)) {
         return RESULT::ERROR_WAIT_TIMEOUT;
@@ -408,12 +404,12 @@ MatrixR4::RESULT MatrixR4::GetButtonState(uint8_t num, BTN_STATE& btnState)
     if (!CommReadData(b, 1)) {
         return RESULT::ERROR_READ_TIMEOUT;
     }
-    btnState = (BTN_STATE)b[0];
+    btnState = (bool)b[0];
 
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetButtonsState(BTN_STATE* btnsState)
+MatrixR4::RESULT MatrixR4::GetButtonsState(bool* btnsState)
 {
     CommSendData(COMM_CMD::GET_BUTTONS_STATE);
     if (!WaitData(COMM_CMD::GET_BUTTONS_STATE, 10)) {
@@ -425,8 +421,8 @@ MatrixR4::RESULT MatrixR4::GetButtonsState(BTN_STATE* btnsState)
         return RESULT::ERROR_READ_TIMEOUT;
     }
     uint16_t flag = BitConverter::ToUInt16(b, 0);
-    btnsState[0]  = (BTN_STATE)(flag & 0x03);
-    btnsState[1]  = (BTN_STATE)((flag >> 3) & 0x03);
+    btnsState[0]  = (bool)(flag);
+    btnsState[1]  = (bool)(flag >> 1);
 
     return RESULT::OK;
 }
@@ -580,10 +576,11 @@ MatrixR4::RESULT MatrixR4::GetFWDescriptor(String& descriptor)
     }
 
     uint8_t len = b[0];
-    uint8_t str[len];
+    uint8_t str[len + 1];
     if (!CommReadData(str, len)) {
         return RESULT::ERROR_READ_TIMEOUT;
     }
+    str[len]   = '\0';
     descriptor = String((char*)str);
     return RESULT::OK;
 }
@@ -651,6 +648,11 @@ MatrixR4::RESULT MatrixR4::RunAutoQC(void)
 void MatrixR4::loop(void)
 {
     WaitData(COMM_CMD::NONE);
+}
+
+void MatrixR4::onBtnChg(BtnChgCallback callback)
+{
+    callbackFunc = callback;
 }
 
 void MatrixR4::CommSendData(COMM_CMD cmd, uint8_t* data, uint16_t size)
@@ -749,7 +751,7 @@ void MatrixR4::HandleCommand(uint8_t cmd)
         uint8_t b[2];
         if (CommReadData(b, 2)) {
             if (b[0] < MatrixR4_BUTTON_NUM) {
-                btnsState[b[0]] = (BTN_STATE)b[1];
+                callbackFunc(b[0] + 1, (BTN_STATE)b[1]);
             }
         }
     } break;

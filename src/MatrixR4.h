@@ -248,6 +248,8 @@ public:
         uint8_t modelIndex;
     } AllInfo_t;
 
+    typedef void (*BtnChgCallback)(uint8_t num, BTN_STATE newState);
+
     RESULT Init();
     // Application API
     // Setting-Init
@@ -270,8 +272,8 @@ public:
     RESULT SetMoveDistance(MOVE_TYPE type, MOVE_ACTION action, uint16_t speed, uint16_t enCounter);
     RESULT SetEncoderResetCounter(uint8_t num);
     // Getting
-    RESULT GetButtonState(uint8_t num, BTN_STATE& btnState);
-    RESULT GetButtonsState(BTN_STATE* btnsState);
+    RESULT GetButtonState(uint8_t num, bool& btnState);
+    RESULT GetButtonsState(bool* btnsState);
     RESULT GetEncoderCounter(uint8_t num, int16_t& enCounter);
     RESULT GetAllEncoderCounter(int16_t* enCounter);
     RESULT GetIMUEuler(double& roll, double& pitch, double& yaw);
@@ -287,10 +289,9 @@ public:
     RESULT RunAutoQC(void);
 
     void loop(void);
+    void onBtnChg(BtnChgCallback callback);
 
     // TODO: 外部存取?
-    // Buttons
-    BTN_STATE btnsState[MatrixR4_BUTTON_NUM];
     // Encoders
     int16_t enCounter[MatrixR4_ENCODER_NUM];
     // IMU
@@ -299,6 +300,7 @@ public:
 
 private:
     SoftwareSerial* commSerial;
+    BtnChgCallback  callbackFunc;
 
     void CommSendData(COMM_CMD cmd, uint8_t* data = NULL, uint16_t size = 0);
     void CommSendData(COMM_CMD cmd, uint8_t data);
