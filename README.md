@@ -1,2 +1,1 @@
-# MatrixR4
-MatrixR4 Arduino Library
+# MatrixR4 Arduino Library
