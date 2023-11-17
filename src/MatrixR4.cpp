@@ -411,6 +411,26 @@ MatrixR4::RESULT MatrixR4::SetEncoderResetCounter(uint8_t num)
     return RESULT::ERROR;
 }
 
+MatrixR4::RESULT MatrixR4::SetStateLED(uint8_t brightness, uint32_t colorRGB)
+{
+    uint8_t data[4];
+    data[0] = brightness;
+    data[1] = (uint8_t)(colorRGB >> 16);
+    data[2] = (uint8_t)(colorRGB >> 8);
+    data[3] = (uint8_t)(colorRGB);
+    CommSendData(COMM_CMD::SET_STATE_LED, data, 4);
+    if (!WaitData(COMM_CMD::SET_STATE_LED, 5)) {
+        return RESULT::ERROR_WAIT_TIMEOUT;
+    }
+
+    uint8_t b[1];
+    if (!CommReadData(b, 1, 10)) {
+        return RESULT::ERROR_READ_TIMEOUT;
+    }
+    if (b[0] == 0x00) return RESULT::OK;
+
+    return RESULT::ERROR;
+}
 // Getting
 MatrixR4::RESULT MatrixR4::GetButtonState(uint8_t num, bool& btnState)
 {
@@ -536,7 +556,7 @@ MatrixR4::RESULT MatrixR4::GetPowerInfo(float& curVolt, float& curVoltPerc)
         return RESULT::ERROR_READ_TIMEOUT;
     }
     curVolt     = b[0] / 10.0f;
-    curVoltPerc = b[1];
+    curVoltPerc = (float)b[1];
 
     return RESULT::OK;
 }
@@ -668,15 +688,14 @@ MatrixR4::RESULT MatrixR4::RunAutoQC(void)
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
 
-    uint8_t b[4];
-    if (!CommReadData(b, 4)) {
+    uint8_t b[1];
+    if (!CommReadData(b, 1)) {
         return RESULT::ERROR_READ_TIMEOUT;
     }
 
-    if (b[0] == 0x00) return RESULT::ERROR_MOTOR;
-    if (b[1] == 0x00) return RESULT::ERROR_OLED;
-    if (b[2] == 0x00) return RESULT::ERROR_I2C_MUX;
-    if (b[3] == 0x00) return RESULT::ERROR_IMU;
+    if ((b[0] & 0x01) == 0x00) return RESULT::ERROR_QC_OLED;
+    if ((b[0] >> 1 & 0x01) == 0x00) return RESULT::ERROR_QC_I2C_MUX;
+    if ((b[0] >> 2 & 0x01) == 0x00) return RESULT::ERROR_QC_IMU;
 
     return RESULT::OK;
 }
@@ -761,8 +780,8 @@ bool MatrixR4::WaitData(COMM_CMD cmd, uint32_t timeout_ms)
                 state = COMM_STATE::WAIT_LEAD;
                 return true;
             } else {
-                HandleCommand(b);
                 state = COMM_STATE::WAIT_LEAD;
+                HandleCommand(b);
             }
         } break;
 

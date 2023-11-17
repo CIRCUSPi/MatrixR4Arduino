@@ -59,6 +59,7 @@ public:
         SET_ALL_SERVO_ANGLE,
         SET_MOVE_DISTANCE,
         SET_ENCODER_RESET_COUNTER,
+        SET_STATE_LED,
 
         // Getting
         GET_BUTTON_STATE = 0x21,
@@ -224,10 +225,9 @@ public:
         ERROR_MOVE_ENCODER,
 
         // RunAutoQC
-        ERROR_MOTOR,
-        ERROR_OLED,
-        ERROR_I2C_MUX,
-        ERROR_IMU,
+        ERROR_QC_OLED,
+        ERROR_QC_I2C_MUX,
+        ERROR_QC_IMU,
 
         ERROR_POWER_VOLT_RANGE,
     };
@@ -268,6 +268,7 @@ public:
     RESULT SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoIntervalMs);
     RESULT SetIMUInit(IMU_ACC_FSR accFSR, IMU_GYRO_FSR gyroFSR, IMU_ODR odr, IMU_FIFO fifo);
     RESULT SetPowerParam(float fullVolt, float cutOffVolt, float alarmVolt);
+    RESULT SetStateLED(uint8_t brightness, uint32_t colorRGB);
     // Setting-Commonly used
     RESULT SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir);
     RESULT SetAllDCMotorSpeed(Motors_Param_t param);
