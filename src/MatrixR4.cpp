@@ -247,6 +247,26 @@ MatrixR4::RESULT MatrixR4::SetIMUInit(
     return RESULT::ERROR;
 }
 
+MatrixR4::RESULT MatrixR4::SetPowerParam(float fullVolt, float cutOffVolt, float alarmVolt)
+{
+    uint8_t data[3];
+    data[0] = (uint8_t)(fullVolt * 10.0f);
+    data[1] = (uint8_t)(cutOffVolt * 10.0f);
+    data[2] = (uint8_t)(alarmVolt * 10.0f);
+    CommSendData(COMM_CMD::SET_POWER_PARAM, data, 3);
+    if (!WaitData(COMM_CMD::SET_POWER_PARAM, 5)) {
+        return RESULT::ERROR_WAIT_TIMEOUT;
+    }
+
+    uint8_t b[1];
+    if (!CommReadData(b, 1, 5)) {
+        return RESULT::ERROR_READ_TIMEOUT;
+    }
+    if (b[0] == 0x00) return RESULT::OK;
+    if (b[0] == 0x02) return RESULT::ERROR_POWER_VOLT_RANGE;
+
+    return RESULT::ERROR;
+}
 // Setting-Commonly used
 MatrixR4::RESULT MatrixR4::SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir)
 {
@@ -504,6 +524,22 @@ MatrixR4::RESULT MatrixR4::GetIMUAcc(double& x, double& y, double& z)
     return RESULT::OK;
 }
 
+MatrixR4::RESULT MatrixR4::GetPowerInfo(float& curVolt, float& curVoltPerc)
+{
+    CommSendData(COMM_CMD::GET_POWER_INFO);
+    if (!WaitData(COMM_CMD::GET_POWER_INFO, 5)) {
+        return RESULT::ERROR_WAIT_TIMEOUT;
+    }
+
+    uint8_t b[2];
+    if (!CommReadData(b, 2)) {
+        return RESULT::ERROR_READ_TIMEOUT;
+    }
+    curVolt     = b[0] / 10.0f;
+    curVoltPerc = b[1];
+
+    return RESULT::OK;
+}
 // Other-Info
 MatrixR4::RESULT MatrixR4::EchoTest(void)
 {

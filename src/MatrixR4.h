@@ -50,6 +50,7 @@ public:
         SET_ENCODER_ECHO_MODE,
         SET_IMU_ECHO_MODE,
         SET_IMU_INIT,
+        SET_POWER_PARAM,
 
         // Setting-Commonly used
         SET_DC_MOTOR_SPEED = 0x11,
@@ -67,6 +68,7 @@ public:
         GET_IMU_EULER,
         GET_IMU_GYRO,
         GET_IMU_ACC,
+        GET_POWER_INFO,
 
         // Auto-Send
         AUTO_SEND_BUTTON_STATE = 0x31,
@@ -227,6 +229,7 @@ public:
         ERROR_I2C_MUX,
         ERROR_IMU,
 
+        ERROR_POWER_VOLT_RANGE,
     };
 
     typedef struct
@@ -264,6 +267,7 @@ public:
     RESULT SetEncoderEchoMode(ENCODER_ECHO_MODE mode, uint16_t echoIntervalMs);
     RESULT SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoIntervalMs);
     RESULT SetIMUInit(IMU_ACC_FSR accFSR, IMU_GYRO_FSR gyroFSR, IMU_ODR odr, IMU_FIFO fifo);
+    RESULT SetPowerParam(float fullVolt, float cutOffVolt, float alarmVolt);
     // Setting-Commonly used
     RESULT SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir);
     RESULT SetAllDCMotorSpeed(Motors_Param_t param);
@@ -279,6 +283,7 @@ public:
     RESULT GetIMUEuler(double& roll, double& pitch, double& yaw);
     RESULT GetIMUGyro(double& x, double& y, double& z);
     RESULT GetIMUAcc(double& x, double& y, double& z);
+    RESULT GetPowerInfo(float& curVolt, float& curVoltPerc);
     // Other-Info
     RESULT EchoTest(void);
     RESULT GetFWVersion(String& version);
