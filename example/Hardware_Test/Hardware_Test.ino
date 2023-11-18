@@ -158,6 +158,8 @@ void setup(void)
     result = matrixR4.SetStateLED(255, 0x00FF00);
     delay(500);
     result = matrixR4.SetStateLED(255, 0x0000FF);
+    delay(500);
+    result = matrixR4.SetStateLED(255, 0x000000);
     if (result != MatrixR4::RESULT::OK) {
         Serial.print("SetStateLED Failed! Result: ");
         Serial.println((int)result);
