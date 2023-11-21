@@ -551,12 +551,14 @@ MatrixR4::RESULT MatrixR4::GetPowerInfo(float& curVolt, float& curVoltPerc)
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
 
-    uint8_t b[2];
-    if (!CommReadData(b, 2)) {
+    uint8_t b[3];
+    if (!CommReadData(b, 3)) {
         return RESULT::ERROR_READ_TIMEOUT;
     }
-    curVolt     = b[0] / 10.0f;
-    curVoltPerc = (float)b[1];
+
+    uint16_t voltRaw = BitConverter::ToUInt16(b, 0);
+    curVolt          = (float)voltRaw / 1000.0f;
+    curVoltPerc      = (float)b[1];
 
     return RESULT::OK;
 }

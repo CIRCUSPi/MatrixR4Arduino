@@ -41,7 +41,7 @@ void loop(void)
         Serial.println((int)result);
     } else {
         Serial.print("Voltage: ");
-        Serial.print(voltage);
+        Serial.print(voltage, 3);
         Serial.print("V, Percent: ");
         Serial.print(voltPercent);
         Serial.println("%");
