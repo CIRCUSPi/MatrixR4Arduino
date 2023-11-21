@@ -558,7 +558,7 @@ MatrixR4::RESULT MatrixR4::GetPowerInfo(float& curVolt, float& curVoltPerc)
 
     uint16_t voltRaw = BitConverter::ToUInt16(b, 0);
     curVolt          = (float)voltRaw / 1000.0f;
-    curVoltPerc      = (float)b[1];
+    curVoltPerc      = (float)b[2];
 
     return RESULT::OK;
 }
