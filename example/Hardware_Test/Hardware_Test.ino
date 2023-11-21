@@ -2,6 +2,7 @@
 #include <Adafruit_SSD1306.h>
 #include <MatrixR4.h>
 
+#define PCAADDR 0x70
 
 #define NOTE_C4 261.63
 #define NOTE_D4 293.66
@@ -191,6 +192,8 @@ void setup(void)
     delay(500);
 
     // Test SSD1306
+    Wire1.begin();
+    Wire1.setClock(400000);
     if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
         Serial.println(F("OLED allocation failed"));
         for (;;)
@@ -218,7 +221,28 @@ void setup(void)
 
 void loop(void)
 {
+    static uint32_t timer = 0;
     matrixR4.loop();
+
+    if (millis() >= timer) {
+        timer = millis() + 1000;
+        // Test I2C Mux
+        for (uint8_t t = 0; t < 4; t++) {
+            pcaselect(t);
+            Serial.print("PCA Port #");
+            Serial.println(t);
+
+            for (uint8_t addr = 0; addr <= 127; addr++) {
+                if (addr == PCAADDR || addr == 0x3C) continue;
+                Wire1.beginTransmission(addr);
+                if (!Wire1.endTransmission()) {
+                    Serial.print("Found I2C 0x");
+                    Serial.println(addr, HEX);
+                }
+            }
+        }
+        Serial.println();
+    }
 }
 
 void SetAllMotor(uint16_t speed, MatrixR4::DIR dir)
@@ -375,4 +399,13 @@ void testdrawchar(void)
     }
 
     display.display();
+}
+
+void pcaselect(uint8_t i)
+{
+    if (i > 7) return;
+
+    Wire1.beginTransmission(PCAADDR);
+    Wire1.write(1 << i);
+    Wire1.endTransmission();
 }
