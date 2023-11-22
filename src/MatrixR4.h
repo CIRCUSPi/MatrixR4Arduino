@@ -253,7 +253,7 @@ public:
 
     typedef void (*BtnChgCallback)(uint8_t num, BTN_STATE newState);
 
-    RESULT Init();
+    RESULT Init(uint32_t timeout_ms = 1000);
     // Application API
     // Setting-Init
     RESULT SetDCMotorDir(uint8_t num, DIR dir);

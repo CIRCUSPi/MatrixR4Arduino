@@ -15,22 +15,22 @@ MatrixR4::MatrixR4(SoftwareSerial* commSerial)
     : commSerial(commSerial)
 {}
 
-MatrixR4::RESULT MatrixR4::Init()
+MatrixR4::RESULT MatrixR4::Init(uint32_t timeout_ms)
 {
-    // TODO: 初始化所有變數
+    commSerial->begin(MatrixR4_COMM_BAUDRATE, SERIAL_8N1);
 
-    if (!commSerial->begin(MatrixR4_COMM_BAUDRATE, SERIAL_8N1)) {
-        return RESULT::ERROR_SOFTSERIAL_BEGIN;
+    timeout_ms = millis() + timeout_ms;
+    while (millis() < timeout_ms) {
+        RESULT result = EchoTest();
+        if (result == RESULT::OK) {
+            return RESULT::OK;
+        } else {
+            // FIXME: Debug
+            Serial.print("EchoTest Failed! Result: ");
+            Serial.println((int)result);
+        }
     }
-
-    RESULT result = EchoTest();
-    if (result != RESULT::OK) {
-        Serial.print("EchoTest Failed! Result: ");
-        Serial.println((int)result);
-        return RESULT::ERROR_INIT;
-    }
-
-    return RESULT::OK;
+    return RESULT::ERROR_INIT;
 }
 
 MatrixR4::RESULT MatrixR4::SetDCMotorDir(uint8_t num, DIR dir)
