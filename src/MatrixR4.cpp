@@ -686,7 +686,7 @@ MatrixR4::RESULT MatrixR4::GetAllInfo(AllInfo_t& info)
 MatrixR4::RESULT MatrixR4::RunAutoQC(void)
 {
     CommSendData(COMM_CMD::RUN_AUTO_QC);
-    if (!WaitData(COMM_CMD::RUN_AUTO_QC, 10)) {
+    if (!WaitData(COMM_CMD::RUN_AUTO_QC, 100)) {
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
 
@@ -745,6 +745,11 @@ bool MatrixR4::CommReadData(uint8_t* data, uint16_t size, uint32_t timeout_ms)
             return true;
         }
     }
+    // Timeout
+    // Clear Buffer
+    while (commSerial->available() > 0) {
+        commSerial->read();
+    }
     return false;
 }
 
@@ -797,6 +802,8 @@ bool MatrixR4::WaitData(COMM_CMD cmd, uint32_t timeout_ms)
         default: state = COMM_STATE::WAIT_LEAD; break;
         }
     }
+    // Timeout
+    state = COMM_STATE::WAIT_LEAD;
     return false;
 }
 
@@ -807,6 +814,7 @@ void MatrixR4::HandleCommand(uint8_t cmd)
     {
         uint8_t b[2];
         if (CommReadData(b, 2)) {
+            if (callbackFunc == NULL) break;
             if (b[0] < MatrixR4_BUTTON_NUM) {
                 callbackFunc(b[0] + 1, (BTN_STATE)b[1]);
             }
