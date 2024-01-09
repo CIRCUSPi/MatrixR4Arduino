@@ -108,14 +108,6 @@ void setup(void)
         Serial.print("RunAutoQC Failed! Result: ");
         Serial.println((int)result);
         switch (result) {
-        case MatrixR4::RESULT::ERROR_QC_OLED:
-        {
-            Serial.println("ERROR OLED");
-        } break;
-        case MatrixR4::RESULT::ERROR_QC_I2C_MUX:
-        {
-            Serial.println("ERROR I2C MUX");
-        } break;
         case MatrixR4::RESULT::ERROR_QC_IMU:
         {
             Serial.println("ERROR IMU");
@@ -193,7 +185,7 @@ void setup(void)
 
     // Test SSD1306
     Wire1.begin();
-    Wire1.setClock(400000);
+    Wire1.setClock(100000);
     if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
         Serial.println(F("OLED allocation failed"));
         for (;;)

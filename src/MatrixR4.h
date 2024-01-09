@@ -225,8 +225,6 @@ public:
         ERROR_MOVE_ENCODER,
 
         // RunAutoQC
-        ERROR_QC_OLED,
-        ERROR_QC_I2C_MUX,
         ERROR_QC_IMU,
 
         ERROR_POWER_VOLT_RANGE,

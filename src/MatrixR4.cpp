@@ -695,9 +695,7 @@ MatrixR4::RESULT MatrixR4::RunAutoQC(void)
         return RESULT::ERROR_READ_TIMEOUT;
     }
 
-    if ((b[0] & 0x01) == 0x00) return RESULT::ERROR_QC_OLED;
-    if ((b[0] >> 1 & 0x01) == 0x00) return RESULT::ERROR_QC_I2C_MUX;
-    if ((b[0] >> 2 & 0x01) == 0x00) return RESULT::ERROR_QC_IMU;
+    if ((b[0] & 0x01) == 0x00) return RESULT::ERROR_QC_IMU;
 
     return RESULT::OK;
 }
