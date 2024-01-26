@@ -469,7 +469,7 @@ MatrixR4::RESULT MatrixR4::GetButtonsState(bool* btnsState)
 
 MatrixR4::RESULT MatrixR4::GetEncoderCounter(uint8_t num, int16_t& enCounter)
 {
-    uint8_t data[1] = {(1 << --num)};
+    uint8_t data[1] = {--num};
     CommSendData(COMM_CMD::GET_ENCODER_COUNTER, data, 1);
     if (!WaitData(COMM_CMD::GET_ENCODER_COUNTER, 10)) {
         return RESULT::ERROR_WAIT_TIMEOUT;
