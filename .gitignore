@@ -34,4 +34,4 @@
 # Specific files
 .vscode
 build_temp
-example
+example/DevSamples

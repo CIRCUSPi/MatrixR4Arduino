@@ -49,6 +49,9 @@
 #define MatrixR4_ENCODER_NUM  4
 #define MatrixR4_BUTTON_NUM   2
 
+#define DIR_REVERSE (MatrixR4::DIR::REVERSE)
+#define DIR_FORWARD (MatrixR4::DIR::FORWARD)
+
 class MatrixR4
 {
 public:
@@ -286,7 +289,6 @@ public:
     RESULT SetDCMotorSpeedRange(uint8_t num, uint16_t min, uint16_t max);
     RESULT SetServoPulseRange(uint8_t num, uint16_t min, uint16_t max);
     RESULT SetServoAngleRange(uint8_t num, uint16_t min, uint16_t max);
-    RESULT SetEncoderEchoMode(ENCODER_ECHO_MODE mode, uint16_t echoIntervalMs);
     RESULT SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoIntervalMs);
     RESULT SetIMUInit(IMU_ACC_FSR accFSR, IMU_GYRO_FSR gyroFSR, IMU_ODR odr, IMU_FIFO fifo);
     RESULT SetPowerParam(float fullVolt, float cutOffVolt, float alarmVolt);

@@ -217,42 +217,6 @@ MatrixR4::RESULT MatrixR4::SetServoAngleRange(uint8_t num, uint16_t min, uint16_
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetEncoderEchoMode(ENCODER_ECHO_MODE mode, uint16_t echoIntervalMs)
-{
-    MR4_DEBUG_PRINT_HEADER(F("[SetEncoderEchoMode]"));
-
-    uint8_t data[3];
-    data[0] = (uint8_t)mode;
-    BitConverter::GetBytes(data + 1, echoIntervalMs);
-    CommSendData(COMM_CMD::SET_ENCODER_ECHO_MODE, data, 3);
-    if (!WaitData(COMM_CMD::SET_ENCODER_ECHO_MODE, 10)) {
-        MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
-        return RESULT::ERROR_WAIT_TIMEOUT;
-    }
-
-    uint8_t b[1];
-    if (!CommReadData(b, 1)) {
-        MR4_DEBUG_PRINT_TAIL(F("ERROR_READ_TIMEOUT"));
-        return RESULT::ERROR_READ_TIMEOUT;
-    }
-
-    if (b[0] == 0x00) {
-        MR4_DEBUG_PRINT_TAIL(F("OK"));
-        return RESULT::OK;
-    }
-    if (b[0] == 0x02) {
-        MR4_DEBUG_PRINT_TAIL(F("ERROR_MODE"));
-        return RESULT::ERROR_MODE;
-    }
-    if (b[0] == 0x03) {
-        MR4_DEBUG_PRINT_TAIL(F("ERROR_INTERVAL"));
-        return RESULT::ERROR_INTERVAL;
-    }
-
-    MR4_DEBUG_PRINT_TAIL(F("ERROR"));
-    return RESULT::ERROR;
-}
-
 MatrixR4::RESULT MatrixR4::SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoIntervalMs)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetIMUEchoMode]"));
