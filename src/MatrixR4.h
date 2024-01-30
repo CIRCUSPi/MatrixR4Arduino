@@ -15,6 +15,32 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
+#define MR4_DEBUG_ENABLE false
+#define MR4_DEBUG_SERIAL Serial
+#if MR4_DEBUG_ENABLE
+#    define MR4_DEBUG_HEADER()     MR4_DEBUG_SERIAL.println(F("\nBMR4\n"))
+#    define MR4_DEBUG_TAIL()       MR4_DEBUG_SERIAL.println(F("\nEMR4\n"))
+#    define MR4_DEBUG_PRINT(...)   MR4_DEBUG_SERIAL.print(__VA_ARGS__)
+#    define MR4_DEBUG_PRINTLN(...) MR4_DEBUG_SERIAL.println(__VA_ARGS__)
+#    define MR4_DEBUG_PRINT_HEADER(...)            \
+        do {                                       \
+            MR4_DEBUG_HEADER();                    \
+            MR4_DEBUG_SERIAL.println(__VA_ARGS__); \
+        } while (0)
+#    define MR4_DEBUG_PRINT_TAIL(...)              \
+        do {                                       \
+            MR4_DEBUG_SERIAL.println(__VA_ARGS__); \
+            MR4_DEBUG_TAIL();                      \
+        } while (0)
+#else
+#    define MR4_DEBUG_HEADER()
+#    define MR4_DEBUG_TAIL()
+#    define MR4_DEBUG_PRINT_HEADER(...)
+#    define MR4_DEBUG_PRINT_TAIL(...)
+#    define MR4_DEBUG_PRINT(...)
+#    define MR4_DEBUG_PRINTLN(...)
+#endif
+
 #define MatrixR4_COMM_LEAD     0x7B
 #define MatrixR4_COMM_BAUDRATE 57600
 
@@ -26,7 +52,7 @@
 class MatrixR4
 {
 public:
-    MatrixR4(SoftwareSerial* uart);
+    MatrixR4();
 
     enum class COMM_STATE
     {
@@ -260,8 +286,6 @@ public:
     RESULT SetDCMotorSpeedRange(uint8_t num, uint16_t min, uint16_t max);
     RESULT SetServoPulseRange(uint8_t num, uint16_t min, uint16_t max);
     RESULT SetServoAngleRange(uint8_t num, uint16_t min, uint16_t max);
-    RESULT SetButtonInit(
-        uint8_t num, BUTTON_ECHO_MODE mode, uint16_t repeatStartMs, uint16_t repeatWorkMs);
     RESULT SetEncoderEchoMode(ENCODER_ECHO_MODE mode, uint16_t echoIntervalMs);
     RESULT SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoIntervalMs);
     RESULT SetIMUInit(IMU_ACC_FSR accFSR, IMU_GYRO_FSR gyroFSR, IMU_ODR odr, IMU_FIFO fifo);
