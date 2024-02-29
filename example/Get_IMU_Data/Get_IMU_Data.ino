@@ -1,19 +1,17 @@
-#include <MatrixR4.h>
-
-MatrixR4 matrixR4;
+#include <MatrixMiniR4.h>
 
 void setup(void)
 {
     Serial.begin(115200);
-    matrixR4.Init();
+    mmL.Init();
 }
 
 void loop(void)
 {
     double X, Y, Z;
 
-    // result = matrixR4.GetIMUAcc(X, Y, Z);
-    matrixR4.GetIMUGyro(X, Y, Z);
+    mmL.GetIMUAcc(X, Y, Z);
+    // mmL.GetIMUGyro(X, Y, Z);
     Serial.print("X=");
     Serial.print(X);
     Serial.print(",Y=");

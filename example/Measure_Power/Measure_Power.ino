@@ -1,6 +1,6 @@
-#include <MatrixR4.h>
+#include <MatrixMiniR4.h>
 
-MatrixR4 matrixR4;
+MMLower matrixR4;
 
 void setup(void)
 {

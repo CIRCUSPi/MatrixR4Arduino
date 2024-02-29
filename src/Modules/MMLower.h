@@ -1,16 +1,16 @@
 /**
- * @file MatrixR4.h
+ * @file MMLower.h
  * @author Zack Huang (zackhuang0513@gmail.com)
- * @brief MatrixR4 library for Arduino
+ * @brief Matrix Mini Lower Computer
  * @version 1.0.0
- * @date 2023-11-14
+ * @date 2024-02-25
  *
- * @copyright Copyright (c) 2023
+ * @copyright Copyright (c) 2024
  *
  */
 
-#ifndef MATRIX_R4_H
-#define MATRIX_R4_H
+#ifndef MMLOWER_H
+#define MMLOWER_H
 
 #include <Arduino.h>
 #include <SoftwareSerial.h>
@@ -41,21 +41,20 @@
 #    define MR4_DEBUG_PRINTLN(...)
 #endif
 
-#define MatrixR4_COMM_LEAD     0x7B
-#define MatrixR4_COMM_BAUDRATE 57600
+#define MatrixR4_COMM_LEAD 0x7B
 
 #define MatrixR4_SERVO_NUM    4
 #define MatrixR4_DC_MOTOR_NUM 4
 #define MatrixR4_ENCODER_NUM  4
 #define MatrixR4_BUTTON_NUM   2
 
-#define DIR_REVERSE (MatrixR4::DIR::REVERSE)
-#define DIR_FORWARD (MatrixR4::DIR::FORWARD)
+#define DIR_REVERSE (MatrixMiniR4::DIR::REVERSE)
+#define DIR_FORWARD (MatrixMiniR4::DIR::FORWARD)
 
-class MatrixR4
+class MMLower
 {
 public:
-    MatrixR4();
+    MMLower(uint8_t rx, uint8_t tx, uint32_t baudrate);
 
     enum class COMM_STATE
     {
@@ -329,6 +328,7 @@ public:
     double imuAccX, imuAccY, imuAccZ;
 
 private:
+    uint32_t        _baudrate;
     SoftwareSerial* commSerial;
     BtnChgCallback  callbackFunc;
 
@@ -339,4 +339,6 @@ private:
     void HandleCommand(uint8_t cmd);
 };
 
-#endif   // MATRIX_R4_H
+extern MMLower mmL;
+
+#endif   // MMLOWER_H

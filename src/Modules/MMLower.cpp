@@ -1,26 +1,27 @@
 /**
- * @file MatrixR4.cpp
+ * @file MMLower.cpp
  * @author Zack Huang (zackhuang0513@gmail.com)
- * @brief Matrix Mini Example
+ * @brief Matrix Mini Lower Computer
  * @version 1.0.0
- * @date 2023-11-14
+ * @date 2024-02-25
  *
- * @copyright Copyright (c) 2023
+ * @copyright Copyright (c) 2024
  *
  */
-#include "MatrixR4.h"
-#include "BitConverter.h"
+#include "MMLower.h"
+#include "Util/BitConverter.h"
 
-MatrixR4::MatrixR4()
+MMLower::MMLower(uint8_t rx, uint8_t tx, uint32_t baudrate)
+    : _baudrate(baudrate)
 {
-    commSerial = new SoftwareSerial(8, 9);
+    commSerial = new SoftwareSerial(rx, tx);
 }
 
-MatrixR4::RESULT MatrixR4::Init(uint32_t timeout_ms)
+MMLower::RESULT MMLower::Init(uint32_t timeout_ms)
 {
     MR4_DEBUG_PRINT_HEADER(F("[Init]"));
 
-    commSerial->begin(MatrixR4_COMM_BAUDRATE, SERIAL_8N1);
+    commSerial->begin(_baudrate, SERIAL_8N1);
 
     timeout_ms = millis() + timeout_ms;
     while (millis() < timeout_ms) {
@@ -37,7 +38,7 @@ MatrixR4::RESULT MatrixR4::Init(uint32_t timeout_ms)
     return RESULT::ERROR_INIT;
 }
 
-MatrixR4::RESULT MatrixR4::SetDCMotorDir(uint8_t num, DIR dir)
+MMLower::RESULT MMLower::SetDCMotorDir(uint8_t num, DIR dir)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetDCMotorDir]"));
 
@@ -62,7 +63,7 @@ MatrixR4::RESULT MatrixR4::SetDCMotorDir(uint8_t num, DIR dir)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetEncoderDir(uint8_t num, DIR dir)
+MMLower::RESULT MMLower::SetEncoderDir(uint8_t num, DIR dir)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetEncoderDir]"));
 
@@ -88,7 +89,7 @@ MatrixR4::RESULT MatrixR4::SetEncoderDir(uint8_t num, DIR dir)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetServoDir(uint8_t num, DIR dir)
+MMLower::RESULT MMLower::SetServoDir(uint8_t num, DIR dir)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetServoDir]"));
 
@@ -114,7 +115,7 @@ MatrixR4::RESULT MatrixR4::SetServoDir(uint8_t num, DIR dir)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetDCMotorSpeedRange(uint8_t num, uint16_t min, uint16_t max)
+MMLower::RESULT MMLower::SetDCMotorSpeedRange(uint8_t num, uint16_t min, uint16_t max)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetDCMotorSpeedRange]"));
 
@@ -143,7 +144,7 @@ MatrixR4::RESULT MatrixR4::SetDCMotorSpeedRange(uint8_t num, uint16_t min, uint1
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetServoPulseRange(uint8_t num, uint16_t min, uint16_t max)
+MMLower::RESULT MMLower::SetServoPulseRange(uint8_t num, uint16_t min, uint16_t max)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetServoPulseRange]"));
 
@@ -180,7 +181,7 @@ MatrixR4::RESULT MatrixR4::SetServoPulseRange(uint8_t num, uint16_t min, uint16_
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetServoAngleRange(uint8_t num, uint16_t min, uint16_t max)
+MMLower::RESULT MMLower::SetServoAngleRange(uint8_t num, uint16_t min, uint16_t max)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetServoAngleRange]"));
 
@@ -217,7 +218,7 @@ MatrixR4::RESULT MatrixR4::SetServoAngleRange(uint8_t num, uint16_t min, uint16_
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoIntervalMs)
+MMLower::RESULT MMLower::SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoIntervalMs)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetIMUEchoMode]"));
 
@@ -252,7 +253,7 @@ MatrixR4::RESULT MatrixR4::SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoInter
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetIMUInit(
+MMLower::RESULT MMLower::SetIMUInit(
     IMU_ACC_FSR accFSR, IMU_GYRO_FSR gyroFSR, IMU_ODR odr, IMU_FIFO fifo)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetIMUInit]"));
@@ -295,7 +296,7 @@ MatrixR4::RESULT MatrixR4::SetIMUInit(
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetPowerParam(float fullVolt, float cutOffVolt, float alarmVolt)
+MMLower::RESULT MMLower::SetPowerParam(float fullVolt, float cutOffVolt, float alarmVolt)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetPowerParam]"));
 
@@ -327,7 +328,7 @@ MatrixR4::RESULT MatrixR4::SetPowerParam(float fullVolt, float cutOffVolt, float
     return RESULT::ERROR;
 }
 // Setting-Commonly used
-MatrixR4::RESULT MatrixR4::SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir)
+MMLower::RESULT MMLower::SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetDCMotorSpeed]"));
 
@@ -360,7 +361,7 @@ MatrixR4::RESULT MatrixR4::SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetAllDCMotorSpeed(Motors_Param_t param)
+MMLower::RESULT MMLower::SetAllDCMotorSpeed(Motors_Param_t param)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetAllDCMotorSpeed]"));
 
@@ -410,7 +411,7 @@ MatrixR4::RESULT MatrixR4::SetAllDCMotorSpeed(Motors_Param_t param)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetServoAngle(uint8_t num, uint16_t angle)
+MMLower::RESULT MMLower::SetServoAngle(uint8_t num, uint16_t angle)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetServoAngle]"));
 
@@ -442,7 +443,7 @@ MatrixR4::RESULT MatrixR4::SetServoAngle(uint8_t num, uint16_t angle)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetAllServoAngle(
+MMLower::RESULT MMLower::SetAllServoAngle(
     uint16_t angle1, uint16_t angle2, uint16_t angle3, uint16_t angle4)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetAllServoAngle]"));
@@ -488,7 +489,7 @@ MatrixR4::RESULT MatrixR4::SetAllServoAngle(
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetMoveDistance(
+MMLower::RESULT MMLower::SetMoveDistance(
     MOVE_TYPE type, MOVE_ACTION action, uint16_t speed, uint16_t enCounter)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetMoveDistance]"));
@@ -531,7 +532,7 @@ MatrixR4::RESULT MatrixR4::SetMoveDistance(
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetEncoderResetCounter(uint8_t num)
+MMLower::RESULT MMLower::SetEncoderResetCounter(uint8_t num)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetEncoderResetCounter]"));
 
@@ -556,7 +557,7 @@ MatrixR4::RESULT MatrixR4::SetEncoderResetCounter(uint8_t num)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::SetStateLED(uint8_t brightness, uint32_t colorRGB)
+MMLower::RESULT MMLower::SetStateLED(uint8_t brightness, uint32_t colorRGB)
 {
     MR4_DEBUG_PRINT_HEADER(F("[SetStateLED]"));
 
@@ -585,13 +586,13 @@ MatrixR4::RESULT MatrixR4::SetStateLED(uint8_t brightness, uint32_t colorRGB)
     return RESULT::ERROR;
 }
 // Getting
-MatrixR4::RESULT MatrixR4::GetButtonState(uint8_t num, bool& btnState)
+MMLower::RESULT MMLower::GetButtonState(uint8_t num, bool& btnState)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetButtonState]"));
 
     uint8_t data[1] = {--num};
     CommSendData(COMM_CMD::GET_BUTTON_STATE, data, 1);
-    if (!WaitData(COMM_CMD::GET_BUTTON_STATE, 10)) {
+    if (!WaitData(COMM_CMD::GET_BUTTON_STATE, 50)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -607,7 +608,7 @@ MatrixR4::RESULT MatrixR4::GetButtonState(uint8_t num, bool& btnState)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetButtonsState(bool* btnsState)
+MMLower::RESULT MMLower::GetButtonsState(bool* btnsState)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetButtonsState]"));
 
@@ -630,7 +631,7 @@ MatrixR4::RESULT MatrixR4::GetButtonsState(bool* btnsState)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetEncoderCounter(uint8_t num, int16_t& enCounter)
+MMLower::RESULT MMLower::GetEncoderCounter(uint8_t num, int16_t& enCounter)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetEncoderCounter]"));
 
@@ -652,7 +653,7 @@ MatrixR4::RESULT MatrixR4::GetEncoderCounter(uint8_t num, int16_t& enCounter)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetAllEncoderCounter(int16_t* enCounter)
+MMLower::RESULT MMLower::GetAllEncoderCounter(int16_t* enCounter)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetAllEncoderCounter]"));
 
@@ -676,14 +677,14 @@ MatrixR4::RESULT MatrixR4::GetAllEncoderCounter(int16_t* enCounter)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetIMUEuler(double& roll, double& pitch, double& yaw)
+MMLower::RESULT MMLower::GetIMUEuler(double& roll, double& pitch, double& yaw)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetIMUEuler]"));
     MR4_DEBUG_PRINT_TAIL(F("ERROR"));
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::GetIMUGyro(double& x, double& y, double& z)
+MMLower::RESULT MMLower::GetIMUGyro(double& x, double& y, double& z)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetIMUGyro]"));
 
@@ -706,7 +707,7 @@ MatrixR4::RESULT MatrixR4::GetIMUGyro(double& x, double& y, double& z)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetIMUAcc(double& x, double& y, double& z)
+MMLower::RESULT MMLower::GetIMUAcc(double& x, double& y, double& z)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetIMUAcc]"));
 
@@ -729,7 +730,7 @@ MatrixR4::RESULT MatrixR4::GetIMUAcc(double& x, double& y, double& z)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetPowerInfo(float& curVolt, float& curVoltPerc)
+MMLower::RESULT MMLower::GetPowerInfo(float& curVolt, float& curVoltPerc)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetPowerInfo]"));
 
@@ -753,7 +754,7 @@ MatrixR4::RESULT MatrixR4::GetPowerInfo(float& curVolt, float& curVoltPerc)
     return RESULT::OK;
 }
 // Other-Info
-MatrixR4::RESULT MatrixR4::EchoTest(void)
+MMLower::RESULT MMLower::EchoTest(void)
 {
     MR4_DEBUG_PRINT_HEADER(F("[EchoTest]"));
 
@@ -777,7 +778,7 @@ MatrixR4::RESULT MatrixR4::EchoTest(void)
     return RESULT::ERROR;
 }
 
-MatrixR4::RESULT MatrixR4::GetFWVersion(String& version)
+MMLower::RESULT MMLower::GetFWVersion(String& version)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetFWVersion]"));
 
@@ -799,7 +800,7 @@ MatrixR4::RESULT MatrixR4::GetFWVersion(String& version)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetFWBuildDay(String& date)
+MMLower::RESULT MMLower::GetFWBuildDay(String& date)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetFWBuildDay]"));
 
@@ -827,7 +828,7 @@ MatrixR4::RESULT MatrixR4::GetFWBuildDay(String& date)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetFWDescriptor(String& descriptor)
+MMLower::RESULT MMLower::GetFWDescriptor(String& descriptor)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetFWDescriptor]"));
 
@@ -855,7 +856,7 @@ MatrixR4::RESULT MatrixR4::GetFWDescriptor(String& descriptor)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetModelIndex(uint8_t& index)
+MMLower::RESULT MMLower::GetModelIndex(uint8_t& index)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetModelIndex]"));
 
@@ -876,7 +877,7 @@ MatrixR4::RESULT MatrixR4::GetModelIndex(uint8_t& index)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::GetAllInfo(AllInfo_t& info)
+MMLower::RESULT MMLower::GetAllInfo(AllInfo_t& info)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetAllInfo]"));
 
@@ -906,7 +907,7 @@ MatrixR4::RESULT MatrixR4::GetAllInfo(AllInfo_t& info)
     return RESULT::OK;
 }
 
-MatrixR4::RESULT MatrixR4::RunAutoQC(void)
+MMLower::RESULT MMLower::RunAutoQC(void)
 {
     MR4_DEBUG_PRINT_HEADER(F("[RunAutoQC]"));
 
@@ -931,17 +932,17 @@ MatrixR4::RESULT MatrixR4::RunAutoQC(void)
     return RESULT::OK;
 }
 
-void MatrixR4::loop(void)
+void MMLower::loop(void)
 {
     WaitData(COMM_CMD::NONE);
 }
 
-void MatrixR4::onBtnChg(BtnChgCallback callback)
+void MMLower::onBtnChg(BtnChgCallback callback)
 {
     callbackFunc = callback;
 }
 
-void MatrixR4::CommSendData(COMM_CMD cmd, uint8_t* data, uint16_t size)
+void MMLower::CommSendData(COMM_CMD cmd, uint8_t* data, uint16_t size)
 {
     uint8_t  arr[3 + size];
     uint8_t* ptr = arr;
@@ -957,13 +958,13 @@ void MatrixR4::CommSendData(COMM_CMD cmd, uint8_t* data, uint16_t size)
     commSerial->flush();
 }
 
-void MatrixR4::CommSendData(COMM_CMD cmd, uint8_t data)
+void MMLower::CommSendData(COMM_CMD cmd, uint8_t data)
 {
     uint8_t _data[1] = {data};
     CommSendData((COMM_CMD)cmd, _data, 1);
 }
 
-bool MatrixR4::CommReadData(uint8_t* data, uint16_t size, uint32_t timeout_ms)
+bool MMLower::CommReadData(uint8_t* data, uint16_t size, uint32_t timeout_ms)
 {
     uint32_t timeout = millis() + timeout_ms;
     while (millis() <= timeout) {
@@ -982,7 +983,7 @@ bool MatrixR4::CommReadData(uint8_t* data, uint16_t size, uint32_t timeout_ms)
     return false;
 }
 
-bool MatrixR4::WaitData(COMM_CMD cmd, uint32_t timeout_ms)
+bool MMLower::WaitData(COMM_CMD cmd, uint32_t timeout_ms)
 {
     static COMM_STATE state = COMM_STATE::WAIT_LEAD;
 
@@ -1036,7 +1037,7 @@ bool MatrixR4::WaitData(COMM_CMD cmd, uint32_t timeout_ms)
     return false;
 }
 
-void MatrixR4::HandleCommand(uint8_t cmd)
+void MMLower::HandleCommand(uint8_t cmd)
 {
     switch (cmd) {
     case (uint8_t)COMM_CMD::AUTO_SEND_BUTTON_STATE:
@@ -1084,3 +1085,5 @@ void MatrixR4::HandleCommand(uint8_t cmd)
     default: break;
     }
 }
+
+MMLower mmL(8, 9, 57600);

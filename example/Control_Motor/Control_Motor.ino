@@ -1,6 +1,6 @@
-#include <MatrixR4.h>
+#include <MatrixMiniR4.h>
 
-MatrixR4 matrixR4;
+MMLower matrixR4;
 
 void setup(void)
 {
@@ -10,9 +10,9 @@ void setup(void)
 
     for (int i = 1; i <= 4; i++) {
         // 設定直流馬達方向為正轉
-        matrixR4.SetDCMotorDir(i, DIR_FORWARD);
+        matrixR4.SetDCMotorDir(i, DIR_REVERSE);
         // 設定編碼器方向為正轉
-        matrixR4.SetEncoderDir(i, DIR_FORWARD);
+        matrixR4.SetEncoderDir(i, DIR_REVERSE);
         // 設定直流馬達速度範圍為 0 ~ 100
         matrixR4.SetDCMotorSpeedRange(i, 0, 100);
     }
@@ -20,7 +20,7 @@ void setup(void)
 
 void loop(void)
 {
-    MatrixR4::RESULT result;
+    MMLower::RESULT result;
     // 設定直流馬達速度，速度範圍為 0 ~ 100，由小到大，間隔 50ms
     for (int i = 0; i <= 100; i++) {
         for (int j = 1; j <= 4; j++) {
