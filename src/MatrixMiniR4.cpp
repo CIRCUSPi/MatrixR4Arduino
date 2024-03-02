@@ -31,6 +31,11 @@ bool MatrixMiniR4::begin()
     RC3.begin();
     RC4.begin();
 
+    OLED = Adafruit_SSD1306(128, 32, &Wire1, -1);
+    OLED.begin(SSD1306_SWITCHCAPVCC, MATRIXMINIR4_OLED_ADDRESS);
+    OLED.clearDisplay();
+    OLED.display();
+
     return (result == MMLower::RESULT::OK);
 }
 

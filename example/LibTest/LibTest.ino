@@ -40,9 +40,11 @@ void loop(void)
     // TaskServo();   // pass
     // TaskMotion();  // pass
     // TaskBuzzer();  // pass
+    // TaskEncoder(); // pass
+    // TaskOLED();    // pass
+    // TaskWiFi();    // pass
 
     // TODO: Test
-    // TaskEncoder();
 }
 
 void TaskLED(void)
@@ -67,8 +69,8 @@ void TaskMotor(void)
         timer = millis() + 5000;
         dir   = !dir;
         MiniR4.M1.setSpeed(100, dir);
-        MiniR4.M2.setSpeed(50, !dir);
-        MiniR4.M3.setSpeed(50, !dir);
+        MiniR4.M2.setSpeed(100, dir);
+        MiniR4.M3.setSpeed(100, dir);
         MiniR4.M4.setSpeed(100, dir);
     }
 }
@@ -146,14 +148,10 @@ void TaskEncoder(void)
         int16_t enc3 = MiniR4.ENC3.getCounter();
         int16_t enc4 = MiniR4.ENC4.getCounter();
 
-        Serial.print("Encoder: ");
-        Serial.print(enc1);
-        Serial.print(" , ");
-        Serial.print(enc2);
-        Serial.print(" , ");
-        Serial.print(enc3);
-        Serial.print(" , ");
-        Serial.println(enc4);
+        char buff[100];
+        sprintf(buff, "Encoder: %d, %d, %d, %d", enc1, enc2, enc3, enc4);
+
+        Serial.println(buff);
     }
 }
 
@@ -168,5 +166,50 @@ void TaskBuzzer(void)
         timer = millis() + 150;
         MiniR4.Buzzer.Tone(notes[idx], 100);
         if (++idx >= 8) idx = 0;
+    }
+}
+
+void TaskOLED(void)
+{
+    static uint32_t timer = 0;
+
+    if (millis() >= timer) {
+        timer = millis() + 1000;
+
+        MiniR4.OLED.clearDisplay();
+        MiniR4.OLED.setTextSize(3);
+        MiniR4.OLED.setTextColor(SSD1306_WHITE);
+        MiniR4.OLED.setCursor(10, 10);
+        MiniR4.OLED.print(String(millis() / 1000) + "s");
+        MiniR4.OLED.display();
+    }
+}
+
+void TaskWiFi(void)
+{
+    static uint32_t timer = 0;
+
+    if (millis() >= timer) {
+        timer = millis() + 5000;
+
+        Serial.println("** Scan Networks **");
+        int numSsid = MiniR4.WiFi.scanNetworks();
+        if (numSsid == -1) {
+            Serial.println("Couldn't get a WiFi connection");
+            while (true)
+                ;
+        }
+
+        Serial.print("number of available networks:");
+        Serial.println(numSsid);
+
+        for (int thisNet = 0; thisNet < numSsid; thisNet++) {
+            Serial.print(thisNet);
+            Serial.print(") ");
+            Serial.print(MiniR4.WiFi.SSID(thisNet));
+            Serial.print(" Signal: ");
+            Serial.print(MiniR4.WiFi.RSSI(thisNet));
+            Serial.println(" dBm");
+        }
     }
 }

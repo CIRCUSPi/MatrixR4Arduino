@@ -18,8 +18,13 @@
 #include "Modules/MiniR4ENC.h"
 #include "Modules/MiniR4LED.h"
 #include "Modules/MiniR4Motion.h"
+#include "Modules/MiniR4OLED.h"
 #include "Modules/MiniR4RC.h"
 
+#include <WiFiS3.h>
+#include <Wire.h>
+
+#define MATRIXMINIR4_OLED_ADDRESS 0x3D
 
 class MatrixMiniR4
 {
@@ -57,6 +62,11 @@ public:
 
     // Buzzer
     MiniR4BUZZER Buzzer;
+
+    // OLED
+    Adafruit_SSD1306 OLED;
+
+    CWifi WiFi;
 
 private:
 };

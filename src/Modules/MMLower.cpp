@@ -44,7 +44,7 @@ MMLower::RESULT MMLower::SetDCMotorDir(uint8_t num, DIR dir)
 
     uint8_t data[2] = {(1 << --num), (uint8_t)dir};
     CommSendData(COMM_CMD::SET_DC_MOTOR_DIR, data, 2);
-    if (!WaitData(COMM_CMD::SET_DC_MOTOR_DIR, 10)) {
+    if (!WaitData(COMM_CMD::SET_DC_MOTOR_DIR, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -69,7 +69,7 @@ MMLower::RESULT MMLower::SetEncoderDir(uint8_t num, DIR dir)
 
     uint8_t data[2] = {(1 << --num), (uint8_t)dir};
     CommSendData(COMM_CMD::SET_ENCODER_DIR, data, 2);
-    if (!WaitData(COMM_CMD::SET_ENCODER_DIR, 10)) {
+    if (!WaitData(COMM_CMD::SET_ENCODER_DIR, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -95,7 +95,7 @@ MMLower::RESULT MMLower::SetServoDir(uint8_t num, DIR dir)
 
     uint8_t data[2] = {(1 << --num), (uint8_t)dir};
     CommSendData(COMM_CMD::SET_SERVO_DIR, data, 2);
-    if (!WaitData(COMM_CMD::SET_SERVO_DIR, 10)) {
+    if (!WaitData(COMM_CMD::SET_SERVO_DIR, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -124,7 +124,7 @@ MMLower::RESULT MMLower::SetDCMotorSpeedRange(uint8_t num, uint16_t min, uint16_
     BitConverter::GetBytes(data + 1, min);
     BitConverter::GetBytes(data + 3, max);
     CommSendData(COMM_CMD::SET_DC_MOTOR_SPEED_RANGE, data, 5);
-    if (!WaitData(COMM_CMD::SET_DC_MOTOR_SPEED_RANGE, 10)) {
+    if (!WaitData(COMM_CMD::SET_DC_MOTOR_SPEED_RANGE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -153,7 +153,7 @@ MMLower::RESULT MMLower::SetServoPulseRange(uint8_t num, uint16_t min, uint16_t 
     BitConverter::GetBytes(data + 1, min);
     BitConverter::GetBytes(data + 3, max);
     CommSendData(COMM_CMD::SET_SERVO_PULSE_RANGE, data, 5);
-    if (!WaitData(COMM_CMD::SET_SERVO_PULSE_RANGE, 10)) {
+    if (!WaitData(COMM_CMD::SET_SERVO_PULSE_RANGE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -190,7 +190,7 @@ MMLower::RESULT MMLower::SetServoAngleRange(uint8_t num, uint16_t min, uint16_t 
     BitConverter::GetBytes(data + 1, min);
     BitConverter::GetBytes(data + 3, max);
     CommSendData(COMM_CMD::SET_SERVO_ANGLE_RANGE, data, 5);
-    if (!WaitData(COMM_CMD::SET_SERVO_ANGLE_RANGE, 10)) {
+    if (!WaitData(COMM_CMD::SET_SERVO_ANGLE_RANGE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -226,7 +226,7 @@ MMLower::RESULT MMLower::SetIMUEchoMode(IMU_ECHO_MODE mode, uint16_t echoInterva
     data[0] = (uint8_t)mode;
     BitConverter::GetBytes(data + 1, echoIntervalMs);
     CommSendData(COMM_CMD::SET_IMU_ECHO_MODE, data, 3);
-    if (!WaitData(COMM_CMD::SET_IMU_ECHO_MODE, 10)) {
+    if (!WaitData(COMM_CMD::SET_IMU_ECHO_MODE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -264,7 +264,7 @@ MMLower::RESULT MMLower::SetIMUInit(
     data[2] = (uint8_t)odr;
     data[3] = (uint8_t)fifo;
     CommSendData(COMM_CMD::SET_IMU_INIT, data, 4);
-    if (!WaitData(COMM_CMD::SET_IMU_INIT, 10)) {
+    if (!WaitData(COMM_CMD::SET_IMU_INIT, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -305,7 +305,7 @@ MMLower::RESULT MMLower::SetPowerParam(float fullVolt, float cutOffVolt, float a
     data[1] = (uint8_t)(cutOffVolt * 10.0f);
     data[2] = (uint8_t)(alarmVolt * 10.0f);
     CommSendData(COMM_CMD::SET_POWER_PARAM, data, 3);
-    if (!WaitData(COMM_CMD::SET_POWER_PARAM, 5)) {
+    if (!WaitData(COMM_CMD::SET_POWER_PARAM, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -337,7 +337,7 @@ MMLower::RESULT MMLower::SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir)
     data[1] = (uint8_t)dir;
     BitConverter::GetBytes(data + 2, speed);
     CommSendData(COMM_CMD::SET_DC_MOTOR_SPEED, data, 4);
-    if (!WaitData(COMM_CMD::SET_DC_MOTOR_SPEED, 5)) {
+    if (!WaitData(COMM_CMD::SET_DC_MOTOR_SPEED, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -375,7 +375,7 @@ MMLower::RESULT MMLower::SetAllDCMotorSpeed(Motors_Param_t param)
     BitConverter::GetBytes(data + 5, param.m3_speed);
     BitConverter::GetBytes(data + 7, param.m4_speed);
     CommSendData(COMM_CMD::SET_ALL_DC_MOTOR_SPEED, data, 10);
-    if (!WaitData(COMM_CMD::SET_ALL_DC_MOTOR_SPEED, 10)) {
+    if (!WaitData(COMM_CMD::SET_ALL_DC_MOTOR_SPEED, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -419,7 +419,7 @@ MMLower::RESULT MMLower::SetServoAngle(uint8_t num, uint16_t angle)
     data[0] = (1 << --num);
     BitConverter::GetBytes(data + 1, angle);
     CommSendData(COMM_CMD::SET_SERVO_ANGLE, data, 3);
-    if (!WaitData(COMM_CMD::SET_SERVO_ANGLE, 10)) {
+    if (!WaitData(COMM_CMD::SET_SERVO_ANGLE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -454,7 +454,7 @@ MMLower::RESULT MMLower::SetAllServoAngle(
     BitConverter::GetBytes(data + 4, angle3);
     BitConverter::GetBytes(data + 6, angle4);
     CommSendData(COMM_CMD::SET_ALL_SERVO_ANGLE, data, 8);
-    if (!WaitData(COMM_CMD::SET_ALL_SERVO_ANGLE, 10)) {
+    if (!WaitData(COMM_CMD::SET_ALL_SERVO_ANGLE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -500,7 +500,7 @@ MMLower::RESULT MMLower::SetMoveDistance(
     BitConverter::GetBytes(data + 2, speed);
     BitConverter::GetBytes(data + 4, enCounter);
     CommSendData(COMM_CMD::SET_MOVE_DISTANCE, data, 6);
-    if (!WaitData(COMM_CMD::SET_MOVE_DISTANCE, 10)) {
+    if (!WaitData(COMM_CMD::SET_MOVE_DISTANCE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -538,7 +538,7 @@ MMLower::RESULT MMLower::SetEncoderResetCounter(uint8_t num)
 
     uint8_t data[1] = {(1 << --num)};
     CommSendData(COMM_CMD::SET_ENCODER_RESET_COUNTER, data, 1);
-    if (!WaitData(COMM_CMD::SET_ENCODER_RESET_COUNTER, 10)) {
+    if (!WaitData(COMM_CMD::SET_ENCODER_RESET_COUNTER, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -567,7 +567,7 @@ MMLower::RESULT MMLower::SetStateLED(uint8_t brightness, uint32_t colorRGB)
     data[2] = (uint8_t)(colorRGB >> 8);
     data[3] = (uint8_t)(colorRGB);
     CommSendData(COMM_CMD::SET_STATE_LED, data, 4);
-    if (!WaitData(COMM_CMD::SET_STATE_LED, 5)) {
+    if (!WaitData(COMM_CMD::SET_STATE_LED, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -592,7 +592,7 @@ MMLower::RESULT MMLower::GetButtonState(uint8_t num, bool& btnState)
 
     uint8_t data[1] = {--num};
     CommSendData(COMM_CMD::GET_BUTTON_STATE, data, 1);
-    if (!WaitData(COMM_CMD::GET_BUTTON_STATE, 50)) {
+    if (!WaitData(COMM_CMD::GET_BUTTON_STATE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -613,7 +613,7 @@ MMLower::RESULT MMLower::GetButtonsState(bool* btnsState)
     MR4_DEBUG_PRINT_HEADER(F("[GetButtonsState]"));
 
     CommSendData(COMM_CMD::GET_BUTTONS_STATE);
-    if (!WaitData(COMM_CMD::GET_BUTTONS_STATE, 10)) {
+    if (!WaitData(COMM_CMD::GET_BUTTONS_STATE, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -637,7 +637,7 @@ MMLower::RESULT MMLower::GetEncoderCounter(uint8_t num, int16_t& enCounter)
 
     uint8_t data[1] = {--num};
     CommSendData(COMM_CMD::GET_ENCODER_COUNTER, data, 1);
-    if (!WaitData(COMM_CMD::GET_ENCODER_COUNTER, 10)) {
+    if (!WaitData(COMM_CMD::GET_ENCODER_COUNTER, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -658,7 +658,7 @@ MMLower::RESULT MMLower::GetAllEncoderCounter(int16_t* enCounter)
     MR4_DEBUG_PRINT_HEADER(F("[GetAllEncoderCounter]"));
 
     CommSendData(COMM_CMD::GET_ALL_ENCODER_COUNTER);
-    if (!WaitData(COMM_CMD::GET_ALL_ENCODER_COUNTER, 10)) {
+    if (!WaitData(COMM_CMD::GET_ALL_ENCODER_COUNTER, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -689,7 +689,7 @@ MMLower::RESULT MMLower::GetIMUGyro(double& x, double& y, double& z)
     MR4_DEBUG_PRINT_HEADER(F("[GetIMUGyro]"));
 
     CommSendData(COMM_CMD::GET_IMU_GYRO);
-    if (!WaitData(COMM_CMD::GET_IMU_GYRO, 10)) {
+    if (!WaitData(COMM_CMD::GET_IMU_GYRO, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -712,7 +712,7 @@ MMLower::RESULT MMLower::GetIMUAcc(double& x, double& y, double& z)
     MR4_DEBUG_PRINT_HEADER(F("[GetIMUAcc]"));
 
     CommSendData(COMM_CMD::GET_IMU_ACC);
-    if (!WaitData(COMM_CMD::GET_IMU_ACC, 10)) {
+    if (!WaitData(COMM_CMD::GET_IMU_ACC, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -735,7 +735,7 @@ MMLower::RESULT MMLower::GetPowerInfo(float& curVolt, float& curVoltPerc)
     MR4_DEBUG_PRINT_HEADER(F("[GetPowerInfo]"));
 
     CommSendData(COMM_CMD::GET_POWER_INFO);
-    if (!WaitData(COMM_CMD::GET_POWER_INFO, 5)) {
+    if (!WaitData(COMM_CMD::GET_POWER_INFO, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -760,7 +760,7 @@ MMLower::RESULT MMLower::EchoTest(void)
 
     uint8_t data[1] = {0x55};
     CommSendData(COMM_CMD::ECHO_TEST, data, 1);
-    if (!WaitData(COMM_CMD::ECHO_TEST, 10)) {
+    if (!WaitData(COMM_CMD::ECHO_TEST, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -783,7 +783,7 @@ MMLower::RESULT MMLower::GetFWVersion(String& version)
     MR4_DEBUG_PRINT_HEADER(F("[GetFWVersion]"));
 
     CommSendData(COMM_CMD::F_VERSION);
-    if (!WaitData(COMM_CMD::F_VERSION, 10)) {
+    if (!WaitData(COMM_CMD::F_VERSION, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -805,7 +805,7 @@ MMLower::RESULT MMLower::GetFWBuildDay(String& date)
     MR4_DEBUG_PRINT_HEADER(F("[GetFWBuildDay]"));
 
     CommSendData(COMM_CMD::F_BUILD_DAY);
-    if (!WaitData(COMM_CMD::F_BUILD_DAY, 10)) {
+    if (!WaitData(COMM_CMD::F_BUILD_DAY, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -833,7 +833,7 @@ MMLower::RESULT MMLower::GetFWDescriptor(String& descriptor)
     MR4_DEBUG_PRINT_HEADER(F("[GetFWDescriptor]"));
 
     CommSendData(COMM_CMD::F_DESCRIPTOR);
-    if (!WaitData(COMM_CMD::F_DESCRIPTOR, 10)) {
+    if (!WaitData(COMM_CMD::F_DESCRIPTOR, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -861,7 +861,7 @@ MMLower::RESULT MMLower::GetModelIndex(uint8_t& index)
     MR4_DEBUG_PRINT_HEADER(F("[GetModelIndex]"));
 
     CommSendData(COMM_CMD::READ_MODEL_INDEX);
-    if (!WaitData(COMM_CMD::READ_MODEL_INDEX, 10)) {
+    if (!WaitData(COMM_CMD::READ_MODEL_INDEX, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
@@ -882,7 +882,7 @@ MMLower::RESULT MMLower::GetAllInfo(AllInfo_t& info)
     MR4_DEBUG_PRINT_HEADER(F("[GetAllInfo]"));
 
     CommSendData(COMM_CMD::F_VERSION);
-    if (!WaitData(COMM_CMD::F_VERSION, 10)) {
+    if (!WaitData(COMM_CMD::F_VERSION, 100)) {
         MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
         return RESULT::ERROR_WAIT_TIMEOUT;
     }
