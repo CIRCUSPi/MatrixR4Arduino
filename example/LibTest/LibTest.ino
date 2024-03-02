@@ -45,6 +45,7 @@ void loop(void)
     // TaskWiFi();    // pass
     // TaskI2CMotion();// pass
     // TaskI2CLaser(); // pass
+    // TaskDIO();   // pass
 
     // TODO: Test
     // TaskI2CColor(); // fail Fix Bug
@@ -316,5 +317,31 @@ void TaskI2CLaser(void)
             Serial.print(dis);
             Serial.println("mm");
         }
+    }
+}
+
+void TaskDIO(void)
+{
+    static uint32_t timer = 0;
+    static bool     dir   = true;
+
+    if (millis() >= timer) {
+        timer = millis() + 200;
+        dir   = !dir;
+
+        bool d1L = MiniR4.D1.getL();
+        bool d1R = MiniR4.D1.getR();
+
+        float distance = MiniR4.D2.US.getDistance();
+
+        MiniR4.D3.setL(dir);
+        MiniR4.D3.setR(!dir);
+
+        bool d4L = MiniR4.D4.getL();
+        bool d4R = MiniR4.D4.getR();
+
+        char buff[50];
+        sprintf(buff, "D2: %d, %d, D4: %d, %d, Distance = %d", d1L, d1R, d4L, d4R, (int)distance);
+        Serial.println(buff);
     }
 }

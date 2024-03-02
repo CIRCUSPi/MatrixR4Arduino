@@ -1,7 +1,6 @@
 #ifndef MINIR4I2C_H
 #define MINIR4I2C_H
 
-#include "MMLower.h"
 #include "Modules/MiniR4ColorSensorExt.h"
 #include "Modules/MiniR4LaserSensorExt.h"
 #include "Modules/MiniR4MotionExt.h"

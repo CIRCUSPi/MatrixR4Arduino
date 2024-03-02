@@ -15,6 +15,7 @@
 #include "Modules/MiniR4BTN.h"
 #include "Modules/MiniR4Buzzer.h"
 #include "Modules/MiniR4DC.h"
+#include "Modules/MiniR4Digital.h"
 #include "Modules/MiniR4ENC.h"
 #include "Modules/MiniR4I2C.h"
 #include "Modules/MiniR4LED.h"
@@ -78,6 +79,12 @@ public:
     MiniR4I2C<1> I2C2;
     MiniR4I2C<2> I2C3;
     MiniR4I2C<3> I2C4;
+
+    // Digital I/O
+    MiniR4Digital<3, 2>   D1;
+    MiniR4Digital<5, 4>   D2;
+    MiniR4Digital<12, 11> D3;
+    MiniR4Digital<13, 10> D4;
 
 private:
 };
