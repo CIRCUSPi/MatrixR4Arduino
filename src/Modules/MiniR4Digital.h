@@ -2,6 +2,7 @@
 #define MiniR4Digital_H
 
 #include "MiniR4HC04.h"
+#include <Arduino.h>
 
 template<uint8_t PIN1, uint8_t PIN2> class MiniR4Digital
 {

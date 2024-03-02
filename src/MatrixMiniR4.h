@@ -12,17 +12,20 @@
 #ifndef MATRIXMINIR4_H
 #define MATRIXMINIR4_H
 
+#include "Modules/MiniR4Analog.h"
 #include "Modules/MiniR4BTN.h"
 #include "Modules/MiniR4Buzzer.h"
+#include "Modules/MiniR4DAC.h"
 #include "Modules/MiniR4DC.h"
-#include "Modules/MiniR4Digital.h"
 #include "Modules/MiniR4ENC.h"
 #include "Modules/MiniR4I2C.h"
 #include "Modules/MiniR4LED.h"
 #include "Modules/MiniR4Motion.h"
 #include "Modules/MiniR4OLED.h"
+#include "Modules/MiniR4PWM.h"
 #include "Modules/MiniR4RC.h"
 
+#include <Arduino.h>
 #include <WiFiS3.h>
 #include <Wire.h>
 
@@ -75,16 +78,25 @@ public:
     // TODO: Add Bluetooth
 
     // I2C
-    MiniR4I2C<0> I2C1;
-    MiniR4I2C<1> I2C2;
-    MiniR4I2C<2> I2C3;
-    MiniR4I2C<3> I2C4;
+    MiniR4I2C<-1, &Wire> I2C0;   // Wire0
+    MiniR4I2C<0, &Wire1> I2C1;   // I2C Mux channel 0
+    MiniR4I2C<1, &Wire1> I2C2;   // I2C Mux channel 1
+    MiniR4I2C<2, &Wire1> I2C3;   // I2C Mux channel 2
+    MiniR4I2C<3, &Wire1> I2C4;   // I2C Mux channel 3
 
-    // Digital I/O
-    MiniR4Digital<3, 2>   D1;
-    MiniR4Digital<5, 4>   D2;
-    MiniR4Digital<12, 11> D3;
-    MiniR4Digital<13, 10> D4;
+    // Digital I/O, PWM
+    MiniR4PWM<3, 2>   D1;   // only arduinoR4 D3 support PWM
+    MiniR4PWM<5, 4>   D2;   // only arduinoR4 D5 support PWM
+    MiniR4PWM<12, 11> D3;   // only arduinoR4 D11 support PWM
+    MiniR4PWM<13, 10> D4;   // only arduinoR4 D10 support PWM
+
+    // Analog I/O, I2C0(Wire)
+    MiniR4DAC<1, 0>    A1;   // only arduinoR4 A0 support DAC
+    MiniR4Analog<3, 2> A2;
+    MiniR4Analog<4, 5> A3;
+
+    // Uart
+    UART Uart = UART(UART2_TX_PIN, UART2_RX_PIN);
 
 private:
 };

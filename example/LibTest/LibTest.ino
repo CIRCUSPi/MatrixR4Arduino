@@ -43,9 +43,12 @@ void loop(void)
     // TaskEncoder(); // pass
     // TaskOLED();    // pass
     // TaskWiFi();    // pass
-    // TaskI2CMotion();// pass
-    // TaskI2CLaser(); // pass
-    // TaskDIO();   // pass
+    // TaskI2CMotion();   // pass
+    // TaskI2CLaser();    // pass
+    // TaskDIO();         // pass
+    // TaskAIO();         // pass
+    // TaskGrayScale();   // pass
+    // TaskUart();        // pass
 
     // TODO: Test
     // TaskI2CColor(); // fail Fix Bug
@@ -295,7 +298,7 @@ void TaskI2CLaser(void)
     static bool initFlag = false;
 
     if (!initFlag) {
-        bool ret = MiniR4.I2C2.MXLaser.begin();
+        bool ret = MiniR4.I2C0.MXLaser.begin();
 
         if (ret) {
             Serial.println("MXLaser init success");
@@ -308,7 +311,7 @@ void TaskI2CLaser(void)
     static uint32_t timer = 0;
     if (millis() >= timer) {
         timer   = millis() + 100;
-        int dis = MiniR4.I2C2.MXLaser.getDistance();
+        int dis = MiniR4.I2C0.MXLaser.getDistance();
 
         if (dis == 8191) {
             Serial.println("TIMEOUT");
@@ -324,15 +327,16 @@ void TaskDIO(void)
 {
     static uint32_t timer = 0;
     static bool     dir   = true;
+    static uint8_t  val   = 0;
 
     if (millis() >= timer) {
         timer = millis() + 200;
         dir   = !dir;
-
+        val += 5;
         bool d1L = MiniR4.D1.getL();
         bool d1R = MiniR4.D1.getR();
 
-        float distance = MiniR4.D2.US.getDistance();
+        float distance = MiniR4.A1.US.getDistance();
 
         MiniR4.D3.setL(dir);
         MiniR4.D3.setR(!dir);
@@ -343,5 +347,62 @@ void TaskDIO(void)
         char buff[50];
         sprintf(buff, "D2: %d, %d, D4: %d, %d, Distance = %d", d1L, d1R, d4L, d4R, (int)distance);
         Serial.println(buff);
+    }
+}
+
+void TaskAIO(void)
+{
+    static uint32_t timer = 0;
+
+    if (millis() >= timer) {
+        timer = millis() + 200;
+
+        int AI1L = MiniR4.A1.getAIL();
+        int AI1R = MiniR4.A1.getAIR();
+
+        int AI2L = MiniR4.A2.getAIL();
+        int AI2R = MiniR4.A2.getAIR();
+
+        int AI3L = MiniR4.A3.getAIL();
+        int AI3R = MiniR4.A3.getAIR();
+
+        char buff[80];
+        sprintf(buff, "AI1: %d, %d, AI2: %d, %d, AI3: %d, %d", AI1L, AI1R, AI2L, AI2R, AI3L, AI3R);
+        Serial.println(buff);
+    }
+}
+
+void TaskGrayScale(void)
+{
+
+    static uint32_t timer = 0;
+
+    if (millis() >= timer) {
+        timer = millis() + 200;
+
+        int AI = MiniR4.A1.getAIL();   // Analog read
+        int DI = MiniR4.A1.getR();     // Digital read
+
+        char buff[50];
+        sprintf(buff, "AI: %d, DI: %d", AI, DI);
+        Serial.println(buff);
+    }
+}
+
+void TaskUart(void)
+{
+    static bool initFlag = false;
+
+    if (!initFlag) {
+        MiniR4.Uart.begin(115200);
+        // Serial1.begin(115200);
+        initFlag = true;
+    }
+
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer = millis() + 100;
+        MiniR4.Uart.println("Hello, Matrix Mini R4");
+        // Serial1.println("Hello, Matrix Mini R4");
     }
 }

@@ -5,7 +5,7 @@
 #include "Modules/MiniR4LaserSensorExt.h"
 #include "Modules/MiniR4MotionExt.h"
 
-template<uint8_t ID> class MiniR4I2C
+template<uint8_t ID, TwoWire* WIRE> class MiniR4I2C
 {
 public:
     MiniR4I2C()
@@ -13,6 +13,10 @@ public:
         MXMotion._ch = ID;
         MXColor._ch  = ID;
         MXLaser._ch  = ID;
+
+        MXMotion._pWire = WIRE;
+        MXColor._pWire  = WIRE;
+        MXLaser._pWire  = WIRE;
     }
 
     MatrixMotion MXMotion;

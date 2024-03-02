@@ -2,7 +2,7 @@
 
 bool MatrixLaser::begin()
 {
-    Wire1.begin();
+    _pWire->begin();
     i2cMUXSelect();
     delay(50);
     if (i2cReadData(Device_ID) == 0x47) {
@@ -29,34 +29,34 @@ uint16_t MatrixLaser::getDistance()
 uint8_t MatrixLaser::i2cReadData(LaserRegType reg)
 {
 
-    Wire1.beginTransmission(MatrixLaser_ADDR);
-    Wire1.write(reg);
-    Wire1.endTransmission(1);
+    _pWire->beginTransmission(MatrixLaser_ADDR);
+    _pWire->write(reg);
+    _pWire->endTransmission(1);
 
     delay(1);
 
-    Wire1.requestFrom(MatrixLaser_ADDR, 1);
+    _pWire->requestFrom(MatrixLaser_ADDR, 1);
 
     delay(1);
 
-    return Wire1.read();
+    return _pWire->read();
 }
 
 void MatrixLaser::i2cMUXSelect()
 {
-    Wire1.beginTransmission(ADDR_PCA954X);
-    Wire1.write((1 << _ch));
-    Wire1.endTransmission(1);
+    _pWire->beginTransmission(ADDR_PCA954X);
+    _pWire->write((1 << _ch));
+    _pWire->endTransmission(1);
     delayMicroseconds(300);
 }
 
 void MatrixLaser::i2cWriteData(LaserRegType reg, uint8_t data)
 {
 
-    Wire1.beginTransmission(MatrixLaser_ADDR);
+    _pWire->beginTransmission(MatrixLaser_ADDR);
 
-    Wire1.write(reg);
-    Wire1.write(data);
+    _pWire->write(reg);
+    _pWire->write(data);
 
-    Wire1.endTransmission(1);
+    _pWire->endTransmission(1);
 }

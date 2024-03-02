@@ -49,7 +49,8 @@ private:
     void    i2cWriteData(MotionRegType reg, uint8_t data);
 
 public:
-    uint8_t _ch = 0;
+    int8_t   _ch = 0;
+    TwoWire* _pWire;
 
     bool begin();
 

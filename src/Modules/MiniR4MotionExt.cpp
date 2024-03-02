@@ -2,7 +2,7 @@
 
 bool MatrixMotion::begin()
 {
-    Wire1.begin();
+    _pWire->begin();
     i2cMUXSelect();
     delay(50);
     if (i2cReadData(Device_ID) == 0x44) {
@@ -64,32 +64,33 @@ int MatrixMotion::getAccel(AxisType axis)
 
 void MatrixMotion::i2cMUXSelect()
 {
-    Wire1.beginTransmission(ADDR_PCA954X);
-    Wire1.write((1 << _ch));
-    Wire1.endTransmission(1);
+    if (_ch < 0) return;   // no MUX
+    _pWire->beginTransmission(ADDR_PCA954X);
+    _pWire->write((1 << _ch));
+    _pWire->endTransmission(1);
     delayMicroseconds(300);
 }
 
 uint8_t MatrixMotion::i2cReadData(MotionRegType reg)
 {
-    Wire1.beginTransmission(MatrixMotion_ADDR);
-    Wire1.write(reg);
-    Wire1.endTransmission(1);
+    _pWire->beginTransmission(MatrixMotion_ADDR);
+    _pWire->write(reg);
+    _pWire->endTransmission(1);
 
     delay(1);
-    Wire1.requestFrom(MatrixMotion_ADDR, 1);
+    _pWire->requestFrom(MatrixMotion_ADDR, 1);
     delay(1);
 
-    return Wire1.read();
+    return _pWire->read();
 }
 
 void MatrixMotion::i2cWriteData(MotionRegType reg, uint8_t data)
 {
 
-    Wire1.beginTransmission(MatrixMotion_ADDR);
+    _pWire->beginTransmission(MatrixMotion_ADDR);
 
-    Wire1.write(reg);
-    Wire1.write(data);
+    _pWire->write(reg);
+    _pWire->write(data);
 
-    Wire1.endTransmission(1);
+    _pWire->endTransmission(1);
 }

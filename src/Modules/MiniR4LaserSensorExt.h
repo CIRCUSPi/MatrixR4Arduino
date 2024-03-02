@@ -27,6 +27,8 @@ private:
 
 public:
     uint8_t  _ch = 0;
+    TwoWire* _pWire;
+
     bool     begin();
     uint16_t getDistance();
 };

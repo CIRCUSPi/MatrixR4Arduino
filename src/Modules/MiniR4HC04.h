@@ -1,6 +1,8 @@
 #ifndef MINIR4HC04_H
 #define MINIR4HC04_H
 
+#include <Arduino.h>
+
 template<uint8_t PIN1, uint8_t PIN2> class MiniR4HC04
 {
 public:
