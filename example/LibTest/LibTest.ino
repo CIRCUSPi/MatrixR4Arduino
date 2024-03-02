@@ -43,8 +43,11 @@ void loop(void)
     // TaskEncoder(); // pass
     // TaskOLED();    // pass
     // TaskWiFi();    // pass
+    // TaskI2CMotion();// pass
+    // TaskI2CLaser(); // pass
 
     // TODO: Test
+    // TaskI2CColor(); // fail Fix Bug
 }
 
 void TaskLED(void)
@@ -210,6 +213,108 @@ void TaskWiFi(void)
             Serial.print(" Signal: ");
             Serial.print(MiniR4.WiFi.RSSI(thisNet));
             Serial.println(" dBm");
+        }
+    }
+}
+
+void TaskI2CMotion(void)
+{
+    static bool initFlag = false;
+
+    if (!initFlag) {
+        bool ret = MiniR4.I2C4.MXMotion.begin();
+
+        if (ret) {
+            Serial.println("MXMotion init success");
+        } else {
+            Serial.println("MXMotion init failed");
+        }
+        initFlag = true;
+    }
+
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer         = millis() + 200;
+        int16_t roll  = MiniR4.I2C4.MXMotion.getRoll();
+        int16_t pitch = MiniR4.I2C4.MXMotion.getPitch();
+        int16_t yaw   = MiniR4.I2C4.MXMotion.getYaw();
+
+        Serial.print("Roll: ");
+        Serial.print(roll);
+        Serial.print(" , Pitch: ");
+        Serial.print(pitch);
+        Serial.print(" , Yaw: ");
+        Serial.println(yaw);
+    }
+}
+
+void TaskI2CColor(void)
+{
+    static bool initFlag = false;
+
+    if (!initFlag) {
+        bool ret = MiniR4.I2C1.MXColor.begin();
+
+        if (ret) {
+            Serial.println("MXColor init success");
+            MiniR4.I2C1.MXColor.setGamma(true);
+            Serial.println("Set gamma correction as open");
+
+            MiniR4.I2C1.MXColor.setLight(true, true, 0);
+            Serial.println("Set fill-light open and in auto adjust mode");
+        } else {
+            Serial.println("MXColor init failed");
+        }
+        initFlag = true;
+    }
+
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer = millis() + 500;
+        Serial.println("===============================================================");
+        Serial.print("R=");
+        Serial.println(MiniR4.I2C1.MXColor.getColor(R));
+        Serial.print("G=");
+        Serial.println(MiniR4.I2C1.MXColor.getColor(G));
+        Serial.print("B=");
+        Serial.println(MiniR4.I2C1.MXColor.getColor(B));
+        Serial.print("C=");
+        Serial.println(MiniR4.I2C1.MXColor.getColor(C));
+        Serial.print("M=");
+        Serial.println(MiniR4.I2C1.MXColor.getColor(M));
+        Serial.print("Y=");
+        Serial.println(MiniR4.I2C1.MXColor.getColor(Y));
+        Serial.print("K=");
+        Serial.println(MiniR4.I2C1.MXColor.getColor(K));
+    }
+}
+
+void TaskI2CLaser(void)
+{
+    static bool initFlag = false;
+
+    if (!initFlag) {
+        bool ret = MiniR4.I2C2.MXLaser.begin();
+
+        if (ret) {
+            Serial.println("MXLaser init success");
+        } else {
+            Serial.println("MXLaser init failed");
+        }
+        initFlag = true;
+    }
+
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer   = millis() + 100;
+        int dis = MiniR4.I2C2.MXLaser.getDistance();
+
+        if (dis == 8191) {
+            Serial.println("TIMEOUT");
+        } else {
+            Serial.print("Distance = ");
+            Serial.print(dis);
+            Serial.println("mm");
         }
     }
 }

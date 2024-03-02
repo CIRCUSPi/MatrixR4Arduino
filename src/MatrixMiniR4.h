@@ -16,6 +16,7 @@
 #include "Modules/MiniR4Buzzer.h"
 #include "Modules/MiniR4DC.h"
 #include "Modules/MiniR4ENC.h"
+#include "Modules/MiniR4I2C.h"
 #include "Modules/MiniR4LED.h"
 #include "Modules/MiniR4Motion.h"
 #include "Modules/MiniR4OLED.h"
@@ -66,7 +67,17 @@ public:
     // OLED
     Adafruit_SSD1306 OLED;
 
+    // WiFi
     CWifi WiFi;
+
+    // Bluetooth
+    // TODO: Add Bluetooth
+
+    // I2C
+    MiniR4I2C<0> I2C1;
+    MiniR4I2C<1> I2C2;
+    MiniR4I2C<2> I2C3;
+    MiniR4I2C<3> I2C4;
 
 private:
 };
