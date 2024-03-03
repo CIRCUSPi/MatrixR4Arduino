@@ -22,6 +22,7 @@
 #include "Modules/MiniR4LED.h"
 #include "Modules/MiniR4Motion.h"
 #include "Modules/MiniR4OLED.h"
+#include "Modules/MiniR4PS2X_lib.h"
 #include "Modules/MiniR4PWM.h"
 #include "Modules/MiniR4RC.h"
 
@@ -97,6 +98,9 @@ public:
 
     // Uart
     UART Uart = UART(UART2_TX_PIN, UART2_RX_PIN);
+
+    // PS2
+    PS2X PS2;
 
 private:
 };

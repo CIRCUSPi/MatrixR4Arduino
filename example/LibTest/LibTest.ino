@@ -34,7 +34,7 @@ void setup(void)
 
 void loop(void)
 {
-    // TaskLED();     // pass
+    TaskLED();   // pass
     // TaskButton();  // pass
     // TaskMotor();   // pass
     // TaskServo();   // pass
@@ -42,13 +42,14 @@ void loop(void)
     // TaskBuzzer();  // pass
     // TaskEncoder(); // pass
     // TaskOLED();    // pass
-    // TaskWiFi();    // pass
+    // TaskWiFi();   // pass
     // TaskI2CMotion();   // pass
     // TaskI2CLaser();    // pass
     // TaskDIO();         // pass
     // TaskAIO();         // pass
     // TaskGrayScale();   // pass
     // TaskUart();        // pass
+    // TaskPS2();         // pass
 
     // TODO: Test
     // TaskI2CColor(); // fail Fix Bug
@@ -395,7 +396,6 @@ void TaskUart(void)
 
     if (!initFlag) {
         MiniR4.Uart.begin(115200);
-        // Serial1.begin(115200);
         initFlag = true;
     }
 
@@ -403,6 +403,23 @@ void TaskUart(void)
     if (millis() >= timer) {
         timer = millis() + 100;
         MiniR4.Uart.println("Hello, Matrix Mini R4");
-        // Serial1.println("Hello, Matrix Mini R4");
+    }
+}
+
+void TaskPS2(void)
+{
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer = millis() + 50;
+
+        MiniR4.PS2.read_gamepad(false, 0);
+        bool L1 = MiniR4.PS2.Button(PSB_L1);
+        bool L2 = MiniR4.PS2.Button(PSB_L2);
+        bool R1 = MiniR4.PS2.Button(PSB_R1);
+        bool R2 = MiniR4.PS2.Button(PSB_R2);
+
+        char buff[50];
+        sprintf(buff, "L1: %d, L2: %d, R1: %d, R2: %d", L1, L2, R1, R2);
+        Serial.println(buff);
     }
 }
