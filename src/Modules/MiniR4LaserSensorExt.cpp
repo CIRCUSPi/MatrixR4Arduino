@@ -44,6 +44,7 @@ uint8_t MatrixLaser::i2cReadData(LaserRegType reg)
 
 void MatrixLaser::i2cMUXSelect()
 {
+    if (_ch < 0) return;   // no MUX
     _pWire->beginTransmission(ADDR_PCA954X);
     _pWire->write((1 << _ch));
     _pWire->endTransmission(1);

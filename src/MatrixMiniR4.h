@@ -24,6 +24,7 @@
 #include "Modules/MiniR4OLED.h"
 #include "Modules/MiniR4PS2X_lib.h"
 #include "Modules/MiniR4PWM.h"
+#include "Modules/MiniR4Power.h"
 #include "Modules/MiniR4RC.h"
 
 #include <Arduino.h>
@@ -37,6 +38,9 @@ class MatrixMiniR4
 public:
     MatrixMiniR4();
     bool begin();
+
+    // Power
+    MiniR4Power PWR;
 
     // DC Motor
     MiniR4DC<1> M1;

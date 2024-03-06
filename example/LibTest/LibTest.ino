@@ -1,10 +1,8 @@
 #include <MatrixMiniR4.h>
-#include <Wire.h>
 
 void setup(void)
 {
     Serial.begin(115200);
-    Wire.begin();
 
     bool ret = MiniR4.begin();
     MiniR4.M1.setHWDir(true);
@@ -34,25 +32,26 @@ void setup(void)
 
 void loop(void)
 {
-    TaskLED();   // pass
-    // TaskButton();  // pass
-    // TaskMotor();   // pass
-    // TaskServo();   // pass
-    // TaskMotion();  // pass
-    // TaskBuzzer();  // pass
-    // TaskEncoder(); // pass
-    // TaskOLED();    // pass
-    // TaskWiFi();   // pass
-    // TaskI2CMotion();   // pass
-    // TaskI2CLaser();    // pass
-    // TaskDIO();         // pass
-    // TaskAIO();         // pass
-    // TaskGrayScale();   // pass
-    // TaskUart();        // pass
-    // TaskPS2();         // pass
+    // TaskLED();           // pass
+    // TaskButton();        // pass
+    // TaskMotor();         // pass
+    // TaskServo();         // pass
+    // TaskMotion();        // pass
+    // TaskBuzzer();        // pass
+    // TaskEncoder();       // pass
+    // TaskOLED();          // pass
+    // TaskWiFi();          // pass
+    // TaskI2CMotion();     // pass
+    // TaskI2CLaser();      // pass
+    // TaskDIO();           // pass
+    // TaskAIO();           // pass
+    // TaskGrayScale();     // pass
+    // TaskUart();          // pass
+    // TaskPS2();           // pass
+    // TaskI2CColor();      // pass
+    // TaskPower();         // pass
 
     // TODO: Test
-    // TaskI2CColor(); // fail Fix Bug
 }
 
 void TaskLED(void)
@@ -262,11 +261,6 @@ void TaskI2CColor(void)
 
         if (ret) {
             Serial.println("MXColor init success");
-            MiniR4.I2C1.MXColor.setGamma(true);
-            Serial.println("Set gamma correction as open");
-
-            MiniR4.I2C1.MXColor.setLight(true, true, 0);
-            Serial.println("Set fill-light open and in auto adjust mode");
         } else {
             Serial.println("MXColor init failed");
         }
@@ -276,21 +270,19 @@ void TaskI2CColor(void)
     static uint32_t timer = 0;
     if (millis() >= timer) {
         timer = millis() + 500;
-        Serial.println("===============================================================");
-        Serial.print("R=");
-        Serial.println(MiniR4.I2C1.MXColor.getColor(R));
-        Serial.print("G=");
-        Serial.println(MiniR4.I2C1.MXColor.getColor(G));
-        Serial.print("B=");
-        Serial.println(MiniR4.I2C1.MXColor.getColor(B));
-        Serial.print("C=");
-        Serial.println(MiniR4.I2C1.MXColor.getColor(C));
-        Serial.print("M=");
-        Serial.println(MiniR4.I2C1.MXColor.getColor(M));
-        Serial.print("Y=");
-        Serial.println(MiniR4.I2C1.MXColor.getColor(Y));
-        Serial.print("K=");
-        Serial.println(MiniR4.I2C1.MXColor.getColor(K));
+        float red, green, blue;
+        MiniR4.I2C1.MXColor.setInterrupt(false);
+        delay(60);
+        MiniR4.I2C1.MXColor.getRGB(&red, &green, &blue);
+        MiniR4.I2C1.MXColor.setInterrupt(true);
+
+        Serial.print("R:\t");
+        Serial.print(int(red));
+        Serial.print("\tG:\t");
+        Serial.print(int(green));
+        Serial.print("\tB:\t");
+        Serial.print(int(blue));
+        Serial.print("\n");
     }
 }
 
@@ -421,5 +413,33 @@ void TaskPS2(void)
         char buff[50];
         sprintf(buff, "L1: %d, L2: %d, R1: %d, R2: %d", L1, L2, R1, R2);
         Serial.println(buff);
+    }
+}
+
+void TaskPower(void)
+{
+    static bool initFlag = false;
+
+    if (!initFlag) {
+        bool ret = MiniR4.PWR.setBattCell(3);
+
+        if (ret) {
+            Serial.println("Set battery cell success");
+        } else {
+            Serial.println("Set battery cell failed");
+        }
+        initFlag = true;
+    }
+
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer            = millis() + 500;
+        float voltage    = MiniR4.PWR.getBattVoltage();
+        float percentage = MiniR4.PWR.getBattPercentage();
+        Serial.print("Voltage: ");
+        Serial.print(String(voltage, 2));
+        Serial.print("V, Percentage: ");
+        Serial.print(String(percentage, 2));
+        Serial.println("%");
     }
 }
