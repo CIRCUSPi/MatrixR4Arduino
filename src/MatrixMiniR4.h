@@ -96,9 +96,9 @@ public:
     MiniR4PWM<13, 10> D4;   // only arduinoR4 D10 support PWM
 
     // Analog I/O, I2C0(Wire)
-    MiniR4DAC<1, 0>    A1;   // only arduinoR4 A0 support DAC
-    MiniR4Analog<3, 2> A2;
-    MiniR4Analog<4, 5> A3;
+    MiniR4DAC<PIN_A1, PIN_A0>    A1;   // only arduinoR4 A0 support DAC
+    MiniR4Analog<PIN_A3, PIN_A2> A2;
+    MiniR4Analog<PIN_A4, PIN_A5> A3;
 
     // Uart
     UART Uart = UART(UART2_TX_PIN, UART2_RX_PIN);
