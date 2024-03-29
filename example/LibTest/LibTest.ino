@@ -62,7 +62,8 @@ void TaskLED(void)
     uint32_t colors[] = {0xFF0000, 0x00FF00, 0x0000FF, 0xFFFFFF, 0x000000};
     if (millis() >= timer) {
         timer = millis() + 500;
-        MiniR4.LED.setColor(1, colors[idx]);
+        MiniR4.LED.setColor(1, 0xFF, 0xFF, 0x00);
+        MiniR4.LED.setColor(2, colors[idx]);
         if (++idx >= 5) idx = 0;
     }
 }
@@ -203,8 +204,7 @@ void TaskWiFi(void)
         int numSsid = MiniR4.WiFi.scanNetworks();
         if (numSsid == -1) {
             Serial.println("Couldn't get a WiFi connection");
-            while (true)
-                ;
+            while (true);
         }
 
         Serial.print("number of available networks:");
@@ -367,7 +367,6 @@ void TaskAIO(void)
 
 void TaskGrayScale(void)
 {
-
     static uint32_t timer = 0;
 
     if (millis() >= timer) {

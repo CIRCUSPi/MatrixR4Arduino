@@ -39,6 +39,12 @@ public:
         return true;
     }
 
+    bool setColor(uint8_t idx, uint8_t r, uint8_t g, uint8_t b)
+    {
+        uint32_t rgb = (r << 16) | (g << 8) | b;
+        return setColor(idx, rgb);
+    }
+
     void setBrightness(uint8_t idx, uint8_t brightness)
     {
         if (idx < 1 || idx > 2) {
@@ -66,7 +72,7 @@ private:
         r = ((_leds[1] >> 16) & 0xFF) * _brightness[1] / 255;
         g = ((_leds[1] >> 8) & 0xFF) * _brightness[1] / 255;
         b = (_leds[1] & 0xFF) * _brightness[1] / 255;
-        // ProcessWS2812BProtocol(r, g, b);
+        ProcessWS2812BProtocol(r, g, b);
         delayMicroseconds(500);
     }
 
