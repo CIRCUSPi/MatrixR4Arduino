@@ -304,7 +304,7 @@ public:
     RESULT GetButtonsState(bool* btnsState);
     RESULT GetEncoderCounter(uint8_t num, int16_t& enCounter);
     RESULT GetAllEncoderCounter(int16_t* enCounter);
-    RESULT GetIMUEuler(double& roll, double& pitch, double& yaw);
+    RESULT GetIMUEuler(int16_t& roll, int16_t& pitch, int16_t& yaw);
     RESULT GetIMUGyro(double& x, double& y, double& z);
     RESULT GetIMUAcc(double& x, double& y, double& z);
     RESULT GetPowerInfo(float& curVolt, float& curVoltPerc);

@@ -12,7 +12,10 @@ public:
     {
         X,
         Y,
-        Z
+        Z,
+        Roll,
+        Pitch,
+        Yaw
     };
 
     double getGyro(AxisType axis)
@@ -43,6 +46,21 @@ public:
             return z;
         else
             return 0;
+    }
+    // FIXME: 測試階段，待驗證
+    int16_t getEuler(AxisType axis)
+    {
+        int16_t roll = 0, pitch = 0, yaw = 0;
+        mmL.GetIMUEuler(roll, pitch, yaw);
+
+        if (axis == AxisType::Roll)
+            return roll;
+        else if (axis == AxisType::Pitch)
+            return pitch;
+        else if (axis == AxisType::Yaw)
+            return yaw;
+        else
+            return -999;
     }
 
 private:

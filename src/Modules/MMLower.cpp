@@ -677,11 +677,28 @@ MMLower::RESULT MMLower::GetAllEncoderCounter(int16_t* enCounter)
     return RESULT::OK;
 }
 
-MMLower::RESULT MMLower::GetIMUEuler(double& roll, double& pitch, double& yaw)
+MMLower::RESULT MMLower::GetIMUEuler(int16_t& roll, int16_t& pitch, int16_t& yaw)
 {
     MR4_DEBUG_PRINT_HEADER(F("[GetIMUEuler]"));
-    MR4_DEBUG_PRINT_TAIL(F("ERROR"));
-    return RESULT::ERROR;
+
+    CommSendData(COMM_CMD::GET_IMU_EULER);
+    if (!WaitData(COMM_CMD::GET_IMU_EULER, 100)) {
+        MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
+        return RESULT::ERROR_WAIT_TIMEOUT;
+    }
+
+    uint8_t b[6];
+    if (!CommReadData(b, 6)) {
+        MR4_DEBUG_PRINT_TAIL(F("ERROR_READ_TIMEOUT"));
+        return RESULT::ERROR_READ_TIMEOUT;
+    }
+
+    roll  = BitConverter::ToInt16(b, 0);
+    pitch = BitConverter::ToInt16(b, 2);
+    yaw   = BitConverter::ToInt16(b, 4);
+
+    MR4_DEBUG_PRINT_TAIL(F("OK"));
+    return RESULT::OK;
 }
 
 MMLower::RESULT MMLower::GetIMUGyro(double& x, double& y, double& z)
