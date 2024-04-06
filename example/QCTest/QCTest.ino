@@ -34,8 +34,8 @@ void loop(void)
 {
     static uint8_t state = 0;
 
-    bool btnAFlag = MiniR4.BTN1.getState();
-    bool btnBFlag = MiniR4.BTN2.getState();
+    bool btnAFlag = MiniR4.BTN_UP.getState();
+    bool btnBFlag = MiniR4.BTN_DOWN.getState();
     btnA.loopEx(btnAFlag);
     btnB.loopEx(btnBFlag);
 

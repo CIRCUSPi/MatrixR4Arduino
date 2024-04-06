@@ -105,12 +105,12 @@ void TaskButton(void)
 
     if (millis() >= timer) {
         timer     = millis() + 200;
-        bool btnA = MiniR4.BTN1.getState();
-        bool btnB = MiniR4.BTN2.getState();
+        bool btnA = MiniR4.BTN_UP.getState();
+        bool btnB = MiniR4.BTN_DOWN.getState();
 
-        Serial.print("BTN1: ");
+        Serial.print("BTN_UP: ");
         Serial.print(btnA);
-        Serial.print(" , BTN2: ");
+        Serial.print(" , BTN_DOWN: ");
         Serial.println(btnB);
     }
 }
@@ -120,28 +120,33 @@ void TaskMotion(void)
     static uint32_t timer = 0;
 
     if (millis() >= timer) {
-        timer    = millis() + 200;
-        double x = MiniR4.Motion.getAccel(MiniR4Motion::AxisType::X);
-        double y = MiniR4.Motion.getAccel(MiniR4Motion::AxisType::Y);
-        double z = MiniR4.Motion.getAccel(MiniR4Motion::AxisType::Z);
+        timer         = millis() + 200;
+        double  ax    = MiniR4.Motion.getAccel(MiniR4Motion::AxisType::X);
+        double  ay    = MiniR4.Motion.getAccel(MiniR4Motion::AxisType::Y);
+        double  az    = MiniR4.Motion.getAccel(MiniR4Motion::AxisType::Z);
+        int16_t gx    = (int16_t)MiniR4.Motion.getGyro(MiniR4Motion::AxisType::X);
+        int16_t gy    = (int16_t)MiniR4.Motion.getGyro(MiniR4Motion::AxisType::Y);
+        int16_t gz    = (int16_t)MiniR4.Motion.getGyro(MiniR4Motion::AxisType::Z);
+        int16_t roll  = MiniR4.Motion.getEuler(MiniR4Motion::AxisType::Roll);
+        int16_t pitch = MiniR4.Motion.getEuler(MiniR4Motion::AxisType::Pitch);
+        int16_t yaw   = MiniR4.Motion.getEuler(MiniR4Motion::AxisType::Yaw);
 
-        Serial.print("Accel: ");
-        Serial.print(x);
-        Serial.print(" , ");
-        Serial.print(y);
-        Serial.print(" , ");
-        Serial.println(z);
-
-        x = MiniR4.Motion.getGyro(MiniR4Motion::AxisType::X);
-        y = MiniR4.Motion.getGyro(MiniR4Motion::AxisType::Y);
-        z = MiniR4.Motion.getGyro(MiniR4Motion::AxisType::Z);
-
-        Serial.print("Gyro: ");
-        Serial.print(x);
-        Serial.print(" , ");
-        Serial.print(y);
-        Serial.print(" , ");
-        Serial.println(z);
+        char buff[128];
+        sprintf(
+            buff,
+            "Accel: x=%5.2f, y=%5.2f, z=%5.2f\n"
+            "Gyro : x=%5d, y=%5d, z=%5d\n"
+            "Euler: r=%5d, p=%5d, y=%5d\n\n",
+            ax,
+            ay,
+            az,
+            gx,
+            gy,
+            gz,
+            roll,
+            pitch,
+            yaw);
+        Serial.print(buff);
     }
 }
 
