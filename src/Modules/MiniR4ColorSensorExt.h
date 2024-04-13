@@ -8,7 +8,7 @@
 #    define ADDR_PCA954X 0x70
 #endif
 
-#define MatrixColor_ADDR 0x29
+#define MatrixColor_ADDR 0x22
 
 typedef enum __ColorType
 {

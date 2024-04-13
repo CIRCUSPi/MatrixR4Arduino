@@ -20,8 +20,8 @@ void setup(void)
     MiniR4.RC3.setHWDir(true);
     MiniR4.RC4.setHWDir(true);
 
-    MiniR4.LED.setBrightness(1, 10);
-    MiniR4.LED.setBrightness(2, 10);
+    MiniR4.LED.setBrightness(1, 100);
+    MiniR4.LED.setBrightness(2, 100);
 
     if (ret) {
         Serial.println("Matrix Mini R4 init success");
@@ -48,7 +48,7 @@ void loop(void)
     // TaskGrayScale();     // pass
     // TaskUart();          // pass
     // TaskPS2();           // pass
-    // TaskI2CColor();      // pass
+    TaskI2CColor();   // pass
     // TaskPower();         // pass
 
     // TODO: Test
@@ -273,21 +273,30 @@ void TaskI2CColor(void)
     }
 
     static uint32_t timer = 0;
-    if (millis() >= timer) {
-        timer = millis() + 500;
-        float red, green, blue;
-        MiniR4.I2C1.MXColor.setInterrupt(false);
-        delay(60);
-        MiniR4.I2C1.MXColor.getRGB(&red, &green, &blue);
-        MiniR4.I2C1.MXColor.setInterrupt(true);
+    if (initFlag) {
+        if (millis() >= timer) {
+            timer     = millis() + 500;
+            uint8_t r = MiniR4.I2C1.MXColor.getColor(R);
+            uint8_t g = MiniR4.I2C1.MXColor.getColor(G);
+            uint8_t b = MiniR4.I2C1.MXColor.getColor(B);
+            uint8_t c = MiniR4.I2C1.MXColor.getColor(C);
+            uint8_t m = MiniR4.I2C1.MXColor.getColor(M);
+            uint8_t y = MiniR4.I2C1.MXColor.getColor(Y);
+            uint8_t k = MiniR4.I2C1.MXColor.getColor(K);
 
-        Serial.print("R:\t");
-        Serial.print(int(red));
-        Serial.print("\tG:\t");
-        Serial.print(int(green));
-        Serial.print("\tB:\t");
-        Serial.print(int(blue));
-        Serial.print("\n");
+            char buff[64];
+            sprintf(
+                buff,
+                "R: %3d, G: %3d, B: %3d, C: %3d, M: %3d, Y: %3d, K: %3d\n",
+                r,
+                g,
+                b,
+                c,
+                m,
+                y,
+                k);
+            Serial.print(buff);
+        }
     }
 }
 
