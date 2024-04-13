@@ -47,7 +47,7 @@ public:
         else
             return 0;
     }
-    // FIXME: 測試階段，待驗證
+
     int16_t getEuler(AxisType axis)
     {
         int16_t roll = 0, pitch = 0, yaw = 0;
@@ -62,6 +62,8 @@ public:
         else
             return -999;
     }
+
+    bool resetIMUValues(void) { return (mmL.SetIMUToZero() == MMLower::RESULT::OK); }
 
 private:
 };

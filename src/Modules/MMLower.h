@@ -88,6 +88,7 @@ public:
         SET_MOVE_DISTANCE,
         SET_ENCODER_RESET_COUNTER,
         SET_STATE_LED,
+        SET_IMU_TO_ZERO,
 
         // Getting
         GET_BUTTON_STATE = 0x21,
@@ -292,6 +293,7 @@ public:
     RESULT SetIMUInit(IMU_ACC_FSR accFSR, IMU_GYRO_FSR gyroFSR, IMU_ODR odr, IMU_FIFO fifo);
     RESULT SetPowerParam(float fullVolt, float cutOffVolt, float alarmVolt);
     RESULT SetStateLED(uint8_t brightness, uint32_t colorRGB);
+    RESULT SetIMUToZero(void);
     // Setting-Commonly used
     RESULT SetDCMotorSpeed(uint8_t num, uint16_t speed, DIR dir);
     RESULT SetAllDCMotorSpeed(Motors_Param_t param);

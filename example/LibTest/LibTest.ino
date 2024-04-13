@@ -28,6 +28,12 @@ void setup(void)
     } else {
         Serial.println("Matrix Mini R4 init failed");
     }
+
+    if (MiniR4.Motion.resetIMUValues()) {
+        Serial.println("Matrix Mini R4 resetIMUValues success");
+    } else {
+        Serial.println("Matrix Mini R4 resetIMUValues failed");
+    }
 }
 
 void loop(void)
@@ -36,7 +42,7 @@ void loop(void)
     // TaskButton();        // pass
     // TaskMotor();         // pass
     // TaskServo();         // pass
-    // TaskMotion();        // pass
+    TaskMotion();   // pass
     // TaskBuzzer();        // pass
     // TaskEncoder();       // pass
     // TaskOLED();          // pass
@@ -48,10 +54,8 @@ void loop(void)
     // TaskGrayScale();     // pass
     // TaskUart();          // pass
     // TaskPS2();           // pass
-    TaskI2CColor();   // pass
+    // TaskI2CColor();      // pass
     // TaskPower();         // pass
-
-    // TODO: Test
 }
 
 void TaskLED(void)
@@ -134,9 +138,9 @@ void TaskMotion(void)
         char buff[128];
         sprintf(
             buff,
-            "Accel: x=%5.2f, y=%5.2f, z=%5.2f\n"
-            "Gyro : x=%5d, y=%5d, z=%5d\n"
-            "Euler: r=%5d, p=%5d, y=%5d\n\n",
+            "Accel: x=%5.2f, y=%5.2f, z=%5.2f\tG\n"
+            "Gyro : x=%5d, y=%5d, z=%5d\t°/s\n"
+            "Euler: r=%5d, p=%5d, y=%5d\t°\n\n",
             ax,
             ay,
             az,

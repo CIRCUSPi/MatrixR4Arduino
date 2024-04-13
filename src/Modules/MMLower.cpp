@@ -585,6 +585,30 @@ MMLower::RESULT MMLower::SetStateLED(uint8_t brightness, uint32_t colorRGB)
     MR4_DEBUG_PRINT_TAIL(F("ERROR"));
     return RESULT::ERROR;
 }
+
+MMLower::RESULT MMLower::SetIMUToZero(void)
+{
+    MR4_DEBUG_PRINT_HEADER(F("[SetIMUToZero]"));
+
+    CommSendData(COMM_CMD::SET_IMU_TO_ZERO);
+    if (!WaitData(COMM_CMD::SET_IMU_TO_ZERO, 1000)) {
+        MR4_DEBUG_PRINT_TAIL(F("ERROR_WAIT_TIMEOUT"));
+        return RESULT::ERROR_WAIT_TIMEOUT;
+    }
+
+    uint8_t b[1];
+    if (!CommReadData(b, 1, 10)) {
+        MR4_DEBUG_PRINT_TAIL(F("ERROR_READ_TIMEOUT"));
+        return RESULT::ERROR_READ_TIMEOUT;
+    }
+    if (b[0] == 0x00) {
+        MR4_DEBUG_PRINT_TAIL(F("OK"));
+        return RESULT::OK;
+    }
+
+    MR4_DEBUG_PRINT_TAIL(F("ERROR"));
+    return RESULT::ERROR;
+}
 // Getting
 MMLower::RESULT MMLower::GetButtonState(uint8_t num, bool& btnState)
 {
