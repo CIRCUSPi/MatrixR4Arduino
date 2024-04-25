@@ -42,7 +42,7 @@ void loop(void)
     // TaskButton();        // pass
     // TaskMotor();         // pass
     // TaskServo();         // pass
-    TaskMotion();   // pass
+    // TaskMotion();        // pass
     // TaskBuzzer();        // pass
     // TaskEncoder();       // pass
     // TaskOLED();          // pass
@@ -56,6 +56,7 @@ void loop(void)
     // TaskPS2();           // pass
     // TaskI2CColor();      // pass
     // TaskPower();         // pass
+    TaskVernier();   // pass
 }
 
 void TaskLED(void)
@@ -458,5 +459,24 @@ void TaskPower(void)
         Serial.print("V, Percentage: ");
         Serial.print(String(percentage, 2));
         Serial.println("%");
+    }
+}
+
+void TaskVernier(void)
+{
+    static bool initFlag = false;
+
+    if (!initFlag) {
+        MiniR4.Vernier.autoID();
+        initFlag = true;
+    }
+
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer               = millis() + 500;
+        float sensorReading = MiniR4.Vernier.readSensor();
+        Serial.print(sensorReading);
+        Serial.print(" ");
+        Serial.println(MiniR4.Vernier.sensorUnits());
     }
 }

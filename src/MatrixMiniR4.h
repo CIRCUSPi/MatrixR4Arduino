@@ -26,6 +26,7 @@
 #include "Modules/MiniR4PWM.h"
 #include "Modules/MiniR4Power.h"
 #include "Modules/MiniR4RC.h"
+#include "Modules/MiniR4VernierLib.h"
 
 #include <Arduino.h>
 #include <WiFiS3.h>
@@ -105,6 +106,9 @@ public:
 
     // PS2
     PS2X PS2;
+
+    // VernierLib
+    MiniR4VernierLib Vernier;
 
 private:
 };
