@@ -56,7 +56,9 @@ void loop(void)
     // TaskPS2();           // pass
     // TaskI2CColor();      // pass
     // TaskPower();         // pass
-    TaskVernier();   // pass
+
+    // TaskVernier();
+    TaskVision();
 }
 
 void TaskLED(void)
@@ -478,5 +480,23 @@ void TaskVernier(void)
         Serial.print(sensorReading);
         Serial.print(" ");
         Serial.println(MiniR4.Vernier.sensorUnits());
+    }
+}
+
+void TaskVision(void)
+{
+    static bool initFlag = false;
+
+    if (!initFlag) {
+        MiniR4.Vision.Begin();
+        initFlag = true;
+    }
+
+    static uint32_t timer = 0;
+    if (millis() >= timer) {
+        timer = millis() + 100;
+
+        unsigned int data[20];
+        int          result = MiniR4.Vision.SmartCamReader(data);
     }
 }

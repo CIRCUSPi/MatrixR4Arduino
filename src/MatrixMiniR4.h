@@ -26,6 +26,7 @@
 #include "Modules/MiniR4PWM.h"
 #include "Modules/MiniR4Power.h"
 #include "Modules/MiniR4RC.h"
+#include "Modules/MiniR4SmartCamReader.h"
 #include "Modules/MiniR4VernierLib.h"
 
 #include <Arduino.h>
@@ -109,6 +110,9 @@ public:
 
     // VernierLib
     MiniR4VernierLib Vernier;
+
+    // Vision
+    MiniR4SmartCamReader Vision;
 
 private:
 };
